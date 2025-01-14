@@ -9,6 +9,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import GoogleAdsense from '@/components/GoogleAdsense'
 
 
 export default async function NovelDetail({ params }: { params: { id: string } }) {
@@ -31,6 +32,9 @@ export default async function NovelDetail({ params }: { params: { id: string } }
 
   return (
     <div  className="min-h-screen flex flex-col">
+      {/* 在页面中使用 */}
+      {/* <GoogleAdsense /> */}
+
       {/* Novel Content */}
       <div className="container mx-auto px-4 pt-32 pb-24">
         <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm md:p-8">

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "nicenovel",
+  title: "nicenovel.org",
   description: "Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thoundsands of english novel, novel series, best author!",
 };
 
@@ -27,6 +27,13 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          <script 
+            async 
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7897104007345492"
+            crossOrigin="anonymous"
+          />
+        </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <Layout>{children}</Layout>
         </body>
