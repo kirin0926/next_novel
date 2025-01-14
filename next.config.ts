@@ -11,7 +11,13 @@ const nextConfig: NextConfig = {
   //   ],
   // },
   images: {
-    domains: ['img.novel-master.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'img.novel-master.com',
+        pathname: '/**',
+      },
+    ],
   },
 };
 

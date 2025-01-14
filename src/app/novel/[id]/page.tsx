@@ -1,6 +1,9 @@
+"use client";
 import supabase from '@/lib/supabase'
 import { formatDate, formatContent } from '@/lib/utils'
 import Image from 'next/image'
+import { useParams } from 'next/navigation';
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,28 +13,46 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import GoogleAdsense from '@/components/GoogleAdsense'
+import { useEffect, useState } from 'react';
 
+export default function NovelDetail() {
+  const params = useParams();
+  const id = params.id;
 
-export default async function NovelDetail({ params }: { params: { id: string } }) {
-  const { id } = await params
-  const { data: novel, error } = await supabase
-    .from('novels')
-    .select('*')
-    .eq('id', id)
-    .single()
+  const [novel, setNovel] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchNovel = async () => {
+      if (id) {
+        const { data, error } = await supabase
+          .from('novels')
+          .select('*')
+          .eq('id', id)
+          .single();
 
-  // console.log(novel)
-  if (error) {
-    console.error('Error fetching novel:', error)
-    return <div className="text-center text-2xl font-bold my-80 ">Novel not found</div>
+        if (error) {
+          console.error('Error fetching novel:', error);
+        } else {
+          setNovel(data);
+        }
+        setLoading(false);
+      }
+    };
+
+    fetchNovel();
+  }, [id]);
+
+  if (loading) {
+    return <div className="text-center text-2xl font-bold my-80">Loading...</div>;
   }
 
-  if (!novel) {
-    return <div className="text-center text-2xl font-bold my-80 ">Novel not found</div>
+  if (error || !novel) {
+    return <div className="text-center text-2xl font-bold my-80">Novel not found</div>;
   }
 
   return (
-    <div  className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col">
       {/* 在页面中使用 */}
       {/* <GoogleAdsense /> */}
 
@@ -45,7 +66,7 @@ export default async function NovelDetail({ params }: { params: { id: string } }
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>novel: {novel.title}</BreadcrumbPage>
+                <BreadcrumbPage>novel: {formatContent(novel.title)}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -73,11 +94,10 @@ export default async function NovelDetail({ params }: { params: { id: string } }
               <p key={index} className="mb-4 whitespace-pre-line">
                 {paragraph}
               </p>
-              ))}
+            ))}
           </div>
         </div>
       </div>
-
     </div>
   );
 } 
