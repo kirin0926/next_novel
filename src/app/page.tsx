@@ -12,15 +12,17 @@ export default async function Home() {
   .from('novels')
   .select('*')
           
-
-  // console.log(novels)
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col">
       {/* Banner/Carousel Section */}
       <div className="mt-16 relative h-[300px] bg-gray-200">
-        <div className="container mx-auto px-4 py-8">
-          <h2 className="text-3xl font-bold">精选小说</h2>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">Discover the World of Nice Novel Stories</h1>
+          <p className="text-lg md:text-xl text-gray-600">
+            Enjoy Quality Reading Anytime, Anywhere
+          </p>
           {/* Add carousel component here */}
+
         </div>
       </div>
 
@@ -41,9 +43,9 @@ export default async function Home() {
                     priority
                   />
                 </div>
-                <CardTitle className="mt-2 sm:mt-4 text-base sm:text-lg md:text-xl line-clamp-1">{novel.title}</CardTitle>
+                <CardTitle className="mt-2 sm:mt-4 text-base sm:text-lg md:text-xl line-clamp-2">{novel.title}</CardTitle>
               </CardHeader>
-              <CardContent className="p-3 sm:p-6 pt-0">
+              <CardContent className="p-3 pt-0 sm:p-6">
                 <p className="text-gray-600 text-sm sm:text-base line-clamp-2">{novel.description}</p>
               </CardContent>
               <CardFooter className="p-3 sm:p-6 flex justify-between mt-auto">
@@ -51,8 +53,8 @@ export default async function Home() {
                   <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="text-sm sm:text-base">{novel.like}</span>
                 </div>
-                <Link href={`/novel/${novel.id}`}>
-                  <Button size="sm" className="text-sm sm:text-base">read more</Button>
+                <Link href={`/novel/${novel.id}`} className="text-sm sm:text-base">
+                read more...
                 </Link>
               </CardFooter>
             </Card>

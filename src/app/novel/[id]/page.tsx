@@ -11,10 +11,11 @@ export default async function NovelDetail({ params }: { params: { id: string } }
   // console.log(novel)
   if (error) {
     console.error('Error fetching novel:', error)
+    return <div className="text-center text-2xl font-bold my-80 ">Novel not found</div>
   }
 
   if (!novel) {
-    return <div>Novel not found</div>
+    return <div className="text-center text-2xl font-bold my-80 ">Novel not found</div>
   }
 
   return (

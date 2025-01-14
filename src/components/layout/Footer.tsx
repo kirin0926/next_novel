@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="mt-auto bg-gray-100 border-t">
+    <footer className="mt-auto border-t">
       <div className="container mx-auto px-4 py-8">
         {/* Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -48,7 +48,7 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-gray-200 pt-8">
+        <div className="border-t pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-600 text-sm text-center md:text-left">
               © {new Date().getFullYear()} Nice Novel . All rights reserved.
