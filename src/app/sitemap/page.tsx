@@ -1,11 +1,8 @@
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import Link from "next/link";
 
 export default function Sitemap() {
   return (
     <main className="min-h-screen flex flex-col">
-      <Navbar />
       
       <div className="container mx-auto px-4 pt-20 pb-8">
         <h1 className="text-3xl font-bold mb-6">网站地图</h1>
@@ -37,8 +34,6 @@ export default function Sitemap() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </main>
   );
 } 

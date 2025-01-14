@@ -10,10 +10,10 @@ import {
   UserButton
 } from '@clerk/nextjs'
 
-export function Navbar() {
+export function Header() {
   return (
-    <nav className="fixed top-0 w-full bg-white border-b z-50 px-4 py-3">
-      <div className="container mx-auto flex justify-between items-center">
+    <header className="fixed top-0 w-full border-b z-50 bg-background">
+      <div className="container flex h-16 items-center justify-between px-4 mx-auto">
         <Link href="/" className="text-2xl font-bold">Nice Novel</Link>
         
         {/* Desktop Navigation */}
@@ -80,6 +80,6 @@ export function Navbar() {
           </SheetContent>
         </Sheet>
       </div>
-    </nav>
+    </header>
   );
 } 

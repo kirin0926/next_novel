@@ -8,9 +8,10 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* About Section */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">about nicenovel.org</h3>
+            <h3 className="text-lg font-semibold mb-4">about</h3>
             <p className="text-gray-600 mb-4">
-              Nice Novel ———— Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thoundsands of english novel, novel series, best author!
+              Nice Novel ———— Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. 
+              On nicenovel.org you can find thoundsands of english novel, novel series, best author!
             </p>
             <div className="flex items-center gap-2">
               <Link href="mailto:contact@nicenovel.org" className="text-gray-600 hover:text-gray-900">
@@ -55,10 +56,10 @@ export function Footer() {
             </p>
             <div className="flex gap-6">
               <Link href="/privacy" className="text-gray-600 hover:text-gray-900 text-sm">
-                隐私政策
+                Privacy Policy
               </Link>
               <Link href="/terms" className="text-gray-600 hover:text-gray-900 text-sm">
-                服务条款
+                Terms of Service
               </Link>
             </div>
           </div>

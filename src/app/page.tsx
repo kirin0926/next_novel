@@ -15,12 +15,10 @@ export default async function Home() {
   return (
     <div className="flex flex-col">
       {/* Banner/Carousel Section */}
-      <div className="mt-16 relative h-[300px] bg-gray-200">
+      <div className="mt-8 relative h-[300px] bg-gray-200">
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">Discover the World of Nice Novel Stories</h1>
-          <p className="text-lg md:text-xl text-gray-600">
-            Enjoy Quality Reading Anytime, Anywhere
-          </p>
+          <p className="text-lg md:text-xl text-gray-600">Enjoy Quality Reading Anytime, Anywhere</p>
           {/* Add carousel component here */}
 
         </div>
@@ -28,7 +26,7 @@ export default async function Home() {
 
       {/* Novel Grid */}
       <div className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold mb-6">热门小说</h2>
+        <h2 className="text-2xl font-bold mb-6">Hot Novels</h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {novels?.map((novel) => (
             <Card key={novel.id} className="flex flex-col hover:shadow-lg transition-shadow duration-200">
@@ -54,7 +52,7 @@ export default async function Home() {
                   <span className="text-sm sm:text-base">{novel.like}</span>
                 </div>
                 <Link href={`/novel/${novel.id}`} className="text-sm sm:text-base">
-                read more...
+                read more
                 </Link>
               </CardFooter>
             </Card>
