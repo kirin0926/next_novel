@@ -35,10 +35,9 @@ export default function NovelDetail({ params }: { params: { id: string } }) {
 
   return (
     <main className="min-h-screen flex flex-col bg-gray-50">
-      <Navbar />
 
       {/* Novel Title Bar */}
-      <div className="fixed top-16 w-full bg-white border-b z-40">
+      {/* <div className="fixed top-16 w-full bg-white border-b z-40">
         <div className="container mx-auto px-4 py-3">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
@@ -55,7 +54,7 @@ export default function NovelDetail({ params }: { params: { id: string } }) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Novel Content */}
       <div className="container mx-auto px-4 pt-32 pb-24">
@@ -79,7 +78,7 @@ export default function NovelDetail({ params }: { params: { id: string } }) {
       </div>
 
       {/* Reading Controls */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+      {/* <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
         <div className="container mx-auto max-w-2xl flex justify-between">
           <Link href={`/novel/${Number(params.id) - 1}`}>
             <Button variant="outline" disabled={Number(params.id) <= 1}>
@@ -90,9 +89,7 @@ export default function NovelDetail({ params }: { params: { id: string } }) {
             <Button variant="outline">Next Chapter</Button>
           </Link>
         </div>
-      </div>
-
-      <Footer />
+      </div> */}
     </main>
   );
 } 

@@ -2,6 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, HomeIcon, BookOpen, Info } from "lucide-react";
 import Link from "next/link";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs'
 
 export function Navbar() {
   return (
@@ -20,6 +27,13 @@ export function Navbar() {
           <Link href="/about" passHref>
             <Button variant="ghost">关于</Button>
           </Link>
+          {/* 其他导航按钮 */}
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton afterSignOutUrl="/"/>
+          </SignedIn>
         </div>
 
         {/* Mobile Navigation */}
