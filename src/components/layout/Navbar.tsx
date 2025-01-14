@@ -66,12 +66,16 @@ export function Navbar() {
                   About
                 </Link>
               </Button> */}
-              <SignedOut>
-                <SignInButton />
-              </SignedOut>
-              <SignedIn>
-                <UserButton afterSignOutUrl="/"/>
-              </SignedIn>
+              <Button variant="ghost" className="w-full justify-start text-base" asChild>
+                <SignedOut>
+                  <SignInButton />
+                </SignedOut>
+              </Button>
+              <Button variant="ghost" className="w-full justify-start text-base" asChild>
+                <SignedIn>
+                  <UserButton afterSignOutUrl="/"/>
+                </SignedIn>
+              </Button>
             </div>
           </SheetContent>
         </Sheet>

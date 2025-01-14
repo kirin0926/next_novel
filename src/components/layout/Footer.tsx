@@ -8,19 +8,19 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* About Section */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">关于 Novel Reader</h3>
+            <h3 className="text-lg font-semibold mb-4">about nicenovel.org</h3>
             <p className="text-gray-600 mb-4">
-              Novel Reader ————Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. On nicenovel.com you can find thoundsands of english novel, novel series, best author!
+              Nice Novel ———— Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thoundsands of english novel, novel series, best author!
             </p>
             <div className="flex items-center gap-2">
-              <Link href="mailto:contact@novelreader.com" className="text-gray-600 hover:text-gray-900">
-                contact@novelreader.com
+              <Link href="mailto:contact@nicenovel.org" className="text-gray-600 hover:text-gray-900">
+                contact@nicenovel.org
               </Link>
             </div>
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="hidden">
             <h3 className="text-lg font-semibold mb-4">快速链接</h3>
             <ul className="space-y-2">
               <li>
@@ -51,7 +51,7 @@ export function Footer() {
         <div className="border-t border-gray-200 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-600 text-sm text-center md:text-left">
-              © {new Date().getFullYear()} Novel Reader. All rights reserved.
+              © {new Date().getFullYear()} Nice Novel . All rights reserved.
             </p>
             <div className="flex gap-6">
               <Link href="/privacy" className="text-gray-600 hover:text-gray-900 text-sm">

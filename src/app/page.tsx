@@ -38,6 +38,7 @@ export default async function Home() {
                     fill
                     className="object-cover rounded-t-lg"
                     sizes="(max-width: 640px) 120px, (max-width: 768px) 160px, 200px"
+                    priority
                   />
                 </div>
                 <CardTitle className="mt-2 sm:mt-4 text-base sm:text-lg md:text-xl line-clamp-1">{novel.title}</CardTitle>
