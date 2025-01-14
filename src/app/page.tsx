@@ -2,8 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart} from "lucide-react";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 
 // Mock data for novels
 const novels = [
@@ -26,9 +24,7 @@ const novels = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col">
-      <Navbar />
-      
+    <div className="min-h-screen flex flex-col">
       {/* Banner/Carousel Section */}
       <div className="mt-16 relative h-[300px] bg-gray-200">
         <div className="container mx-auto px-4 py-8">
@@ -65,8 +61,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-
-        <Footer />
-      </main>
+    </div>
   );
 }
