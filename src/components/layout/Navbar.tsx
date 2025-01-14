@@ -14,18 +14,18 @@ export function Navbar() {
   return (
     <nav className="fixed top-0 w-full bg-white border-b z-50 px-4 py-3">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">Novel Reader</Link>
+        <Link href="/" className="text-2xl font-bold">Nice Novel</Link>
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex gap-4">
           <Link href="/" passHref>
-            <Button variant="ghost">首页</Button>
+            <Button variant="ghost">Home</Button>
           </Link>
           <Link href="/categories" passHref>
-            <Button variant="ghost">分类</Button>
+            <Button variant="ghost">Categories</Button>
           </Link>
           <Link href="/about" passHref>
-            <Button variant="ghost">关于</Button>
+            <Button variant="ghost">About</Button>
           </Link>
           {/* 其他导航按钮 */}
           <SignedOut>
@@ -45,25 +45,25 @@ export function Navbar() {
           </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
-              <SheetTitle>菜单</SheetTitle>
+              <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-3 mt-8">
               <Button variant="ghost" className="w-full justify-start text-base" asChild>
                 <Link href="/" className="flex items-center gap-2">
                   <HomeIcon className="h-5 w-5" />
-                  首页
+                  Home
                 </Link>
               </Button>
               <Button variant="ghost" className="w-full justify-start text-base" asChild>
                 <Link href="/categories" className="flex items-center gap-2">
                   <BookOpen className="h-5 w-5" />
-                  分类
+                  Categories
                 </Link>
               </Button>
               <Button variant="ghost" className="w-full justify-start text-base" asChild>
                 <Link href="/about" className="flex items-center gap-2">
                   <Info className="h-5 w-5" />
-                  关于
+                  About
                 </Link>
               </Button>
             </div>

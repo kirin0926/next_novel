@@ -2,27 +2,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart} from "lucide-react";
 import Link from "next/link";
+import supabase from '@/lib/supabase'
+import Image from "next/image";
 
-// Mock data for novels
-const novels = [
-  {
-    id: 1,
-    title: "The Great Adventure",
-    cover: "/covers/1.jpg",
-    likes: 1234,
-    description: "An epic journey through unknown lands..."
-  },
-  {
-    id: 2,
-    title: "Mystery of the Night",
-    cover: "/covers/2.jpg",
-    likes: 856,
-    description: "A thrilling mystery that will keep you guessing..."
-  },
-  // Add more mock novels as needed
-];
+export default async function Home() {
+  
+    
+  let { data: novels, error } = await supabase
+  .from('novels')
+  .select('*')
+          
 
-export default function Home() {
+  // console.log(novels)
   return (
     <div className="min-h-screen flex flex-col">
       {/* Banner/Carousel Section */}
@@ -37,11 +28,17 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <h2 className="text-2xl font-bold mb-6">热门小说</h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-          {novels.map((novel) => (
+          {novels?.map((novel) => (
             <Card key={novel.id} className="flex flex-col hover:shadow-lg transition-shadow duration-200">
               <CardHeader className="p-3 sm:p-6">
-                <div className="relative h-[120px] sm:h-[160px] md:h-[200px] bg-gray-300 rounded-t-lg">
-                  {/* Replace with actual Image component when you have images */}
+                <div className="relative h-[120px] sm:h-[160px] md:h-[200px]">
+                  <Image
+                    src={novel.cover || '/placeholder-cover.jpg'}
+                    alt={novel.title}
+                    fill
+                    className="object-cover rounded-t-lg"
+                    sizes="(max-width: 640px) 120px, (max-width: 768px) 160px, 200px"
+                  />
                 </div>
                 <CardTitle className="mt-2 sm:mt-4 text-base sm:text-lg md:text-xl line-clamp-1">{novel.title}</CardTitle>
               </CardHeader>
@@ -51,10 +48,10 @@ export default function Home() {
               <CardFooter className="p-3 sm:p-6 flex justify-between mt-auto">
                 <div className="flex items-center gap-1 sm:gap-2">
                   <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="text-sm sm:text-base">{novel.likes}</span>
+                  <span className="text-sm sm:text-base">{novel.like}</span>
                 </div>
                 <Link href={`/novel/${novel.id}`}>
-                  <Button size="sm" className="text-sm sm:text-base">阅读更多</Button>
+                  <Button size="sm" className="text-sm sm:text-base">read more</Button>
                 </Link>
               </CardFooter>
             </Card>
