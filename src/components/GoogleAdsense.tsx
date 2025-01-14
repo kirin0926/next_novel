@@ -1,17 +1,24 @@
 'use client'
 
 import { useEffect } from 'react'
+import dynamic from 'next/dynamic'
 
 declare global {
   interface Window {
-    adsbygoogle: any[]
+    adsbygoogle: any[],
+    plausible: {
+      q: any[]
+    }
   }
 }
 
-export default function GoogleAdsense() {
+function GoogleAdsense() {
   useEffect(() => {
     try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({})
+      if (typeof window !== 'undefined') {
+        (window.adsbygoogle = window.adsbygoogle || []).push({})
+        window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }
+      }
     } catch (err) {
       console.log(err)
     }
@@ -27,4 +34,9 @@ export default function GoogleAdsense() {
       data-full-width-responsive="true"
     />
   )
-} 
+}
+
+// 使用 dynamic 导入来确保组件只在客户端渲染
+export default dynamic(() => Promise.resolve(GoogleAdsense), {
+  ssr: false
+}) 

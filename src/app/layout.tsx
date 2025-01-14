@@ -33,6 +33,7 @@ export default function RootLayout({
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7897104007345492"
             crossOrigin="anonymous"
           />
+          <script defer data-domain="nicenovel.org" src="https://plausible.io/js/script.outbound-links.pageview-props.revenue.tagged-events.js"></script>
         </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <Layout>{children}</Layout>
