@@ -21,12 +21,12 @@ export function Navbar() {
           <Link href="/" passHref>
             <Button variant="ghost">Home</Button>
           </Link>
-          <Link href="/categories" passHref>
+          {/* <Link href="/categories" passHref>
             <Button variant="ghost">Categories</Button>
           </Link>
           <Link href="/about" passHref>
             <Button variant="ghost">About</Button>
-          </Link>
+          </Link> */}
           {/* 其他导航按钮 */}
           <SignedOut>
             <SignInButton />
@@ -54,7 +54,7 @@ export function Navbar() {
                   Home
                 </Link>
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-base" asChild>
+              {/* <Button variant="ghost" className="w-full justify-start text-base" asChild>
                 <Link href="/categories" className="flex items-center gap-2">
                   <BookOpen className="h-5 w-5" />
                   Categories
@@ -65,7 +65,13 @@ export function Navbar() {
                   <Info className="h-5 w-5" />
                   About
                 </Link>
-              </Button>
+              </Button> */}
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton afterSignOutUrl="/"/>
+              </SignedIn>
             </div>
           </SheetContent>
         </Sheet>
