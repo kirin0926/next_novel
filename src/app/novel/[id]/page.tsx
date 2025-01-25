@@ -2,6 +2,7 @@ import supabase from '@/lib/supabase'
 import { formatDate, formatContent } from '@/lib/utils'
 import { Metadata, ResolvingMetadata } from 'next'
 import { redirect } from 'next/navigation'
+import { GetStaticProps, GetStaticPaths } from 'next'
 
 // import { params}
 import NovelDetailClient from './NovelDetailClient'
@@ -73,33 +74,44 @@ export async function generateMetadata(
   }
 }
 
-// 生成静态路径
-export async function generateStaticParams() {
+// 获取静态路径
+export const getStaticPaths: GetStaticPaths = async () => {
   const { data: novels } = await supabase
     .from('novels')
     .select('id')
-  
-  return novels?.map((novel) => ({
-    id: novel.id.toString(),
+
+  const paths = novels?.map((novel) => ({
+    params: { id: novel.id.toString() },
   })) || []
+
+  return { paths, fallback: 'blocking' }
 }
 
-// 服务端组件
-export default async function NovelDetail({
-  params,
-  searchParams,
-}: Props) {
-  // 获取小说数据
+// 获取静态属性
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { id } = context.params as { id: string }
   const { data: novel } = await supabase
     .from('novels')
     .select('*')
-    .eq('id', (await params).id)
+    .eq('id', id)
     .single()
 
   if (!novel) {
-    return <div className="text-center text-2xl font-bold my-80">Novel not found</div>
+    return {
+      notFound: true,
+    }
   }
 
+  return {
+    props: {
+      novel,
+    },
+    revalidate: 60, // 每60秒重新生成页面
+  }
+}
+
+// 服务端组件
+export default function NovelDetail({ novel }: { novel: any }) {
   // 添加结构化数据
   const jsonLd = {
     '@context': 'https://schema.org',
