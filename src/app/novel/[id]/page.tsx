@@ -8,14 +8,14 @@ import { GetStaticProps, GetStaticPaths } from 'next'
 import NovelDetailClient from './NovelDetailClient'
 
 // 修改 Props 类型定义
-type Props = {
-  params: Promise<{ id: string }>
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}
+// type Props = {
+//   params: Promise<{ id: string }>
+//   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+// }
 
 // 生成动态 metadata
 export async function generateMetadata(
-  { params, searchParams }: Props,
+  { params, searchParams }: { params: Promise<{ id: string }>, searchParams: Promise<{ [key: string]: string | string[] | undefined }> },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const id = (await params).id
@@ -75,21 +75,46 @@ export async function generateMetadata(
 }
 
 // 获取静态路径
-export const getStaticPaths: GetStaticPaths = async () => {
-  const { data: novels } = await supabase
-    .from('novels')
-    .select('id')
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const { data: novels } = await supabase
+//     .from('novels')
+//     .select('id')
 
-  const paths = novels?.map((novel) => ({
-    params: { id: novel.id.toString() },
-  })) || []
+//   const paths = novels?.map((novel) => ({
+//     params: { id: novel.id.toString() },
+//   })) || []
 
-  return { paths, fallback: 'blocking' }
-}
+//   return { paths, fallback: 'blocking' }
+// }
 
 // 获取静态属性
-export const getStaticProps: GetStaticProps = async (context) => {
-  const { id } = context.params as { id: string }
+// export const getStaticProps: GetStaticProps = async (context) => {
+//   const { id } = context.params as { id: string }
+//   const { data: novel } = await supabase
+//     .from('novels')
+//     .select('*')
+//     .eq('id', id)
+//     .single()
+
+//   if (!novel) {
+//     return {
+//       notFound: true,
+//     }
+//   }
+
+//   return {
+//     props: {
+//       novel,
+//     },
+//     revalidate: 60, // 每60秒重新生成页面
+//   }
+// }
+
+// 使用 supabase 获取数据并设置 revalidate
+export default async function NovelDetail({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
+  // 获取小说数据
   const { data: novel } = await supabase
     .from('novels')
     .select('*')
@@ -97,21 +122,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
     .single()
 
   if (!novel) {
-    return {
-      notFound: true,
-    }
+    return <div>Novel Not Found</div>
   }
 
-  return {
-    props: {
-      novel,
-    },
-    revalidate: 60, // 每60秒重新生成页面
-  }
-}
-
-// 服务端组件
-export default function NovelDetail({ novel }: { novel: any }) {
   // 添加结构化数据
   const jsonLd = {
     '@context': 'https://schema.org',
