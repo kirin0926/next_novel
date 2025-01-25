@@ -28,8 +28,8 @@ export async function generateMetadata(
 
   if (!novel) {
     return {
-      title: 'Novel Not Found - nicenovel.org',
-      description: 'The requested novel could not be found.Adventure Billionaire Christian Classic Fantasy Historical Horror Humorous Mystery New Adult Romance Science Fiction Thriller Western Young Adult. Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thoundsands of english novel, novel series, best author!',
+      title: 'Novel Not Found - nicenovel.org - Read novels online free, free books online, read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thousands of English novels, novel series, best author! Also check out NovelShort, NovelMaster, RealNovel, NovaBeats.',
+      description: 'The requested novel could not be found. Adventure Billionaire Christian Classic Fantasy Historical Horror Humorous Mystery New Adult Romance Science Fiction Thriller Western Young Adult. Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thousands of English novels, novel series, best author!',
     }
   }
 
@@ -42,12 +42,16 @@ export async function generateMetadata(
     'read novel',
     'read novel online',
     'read novel online free',
+    'novelshort', // 新增竞争对手名字
+    'novelmaster', // 新增竞争对手名字
+    'realnovel', // 新增竞争对手名字
+    'novabeats', // 新增竞争对手名字
     novel.tags, // 如果有标签字段
   ].filter(Boolean)
 
   return {
-    title: `${novel.title} - nicenovel.org - Read novels online free, free books online, read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thoundsands of english novel, novel series, best author!`,
-    description: novel.description || `Read ${novel.title}, author: ${novel.author}. Find more great novels on nicenovel.org.Adventure Billionaire Christian Classic Fantasy Historical Horror Humorous Mystery New Adult Romance Science Fiction Thriller Western Young Adult. Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thoundsands of english novel, novel series, best author!`,
+    title: `${novel.title} - nicenovel.org - Read novels online free, free books online, read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thousands of English novels, novel series, best author! Also check out NovelShort, NovelMaster, RealNovel, NovaBeats.`,
+    description: novel.description || `Read ${novel.title}, author: ${novel.author}. Find more great novels on nicenovel.org. Adventure Billionaire Christian Classic Fantasy Historical Horror Humorous Mystery New Adult Romance Science Fiction Thriller Western Young Adult. Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thousands of English novels, novel series, best author! Also check out NovelShort, NovelMaster, RealNovel, NovaBeats.`,
     keywords: keywords,
     openGraph: {
       title: novel.title,

@@ -34,7 +34,7 @@ export default function NovelDetailClient({ initialNovel }: NovelDetailClientPro
 
           <div className="relative h-[400px] sm:h-[440px] md:h-[480px]">
             <Image 
-              src={initialNovel.cover || '/placeholder-cover.jpg'} 
+              src={initialNovel.cover || '/placeholder-cover.png'} 
               alt={initialNovel.title} 
               fill
               className="object-cover object-center"

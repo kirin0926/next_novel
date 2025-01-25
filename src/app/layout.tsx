@@ -16,8 +16,33 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "nicenovel.org Read Novels Online Free - Free Books Online",
-  description: "Adventure Billionaire Christian Classic Fantasy Historical Horror Humorous Mystery New Adult Romance Science Fiction Thriller Western Young Adult. Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thoundsands of english novel, novel series, best author!",
+  title: "Read Novels Online Free - nicenovel.org | Free Books Online | NovelShort, NovelMaster, RealNovel, NovaBeats",
+  description: "Discover thousands of English novels and series on nicenovel.org. Genres include Adventure, Billionaire, Christian, Classic, Fantasy, Historical, Horror, Humorous, Mystery, New Adult, Romance, Science Fiction, Thriller, Western, and Young Adult. Read novels online free, free books online. Explore NovelShort, NovelMaster, RealNovel, NovaBeats.",
+  keywords: [
+    "novels online",
+    "free books",
+    "read novels",
+    "online reading",
+    "NovelShort",
+    "NovelMaster",
+    "RealNovel",
+    "NovaBeats",
+    "Adventure",
+    "Billionaire",
+    "Christian",
+    "Classic",
+    "Fantasy",
+    "Historical",
+    "Horror",
+    "Humorous",
+    "Mystery",
+    "New Adult",
+    "Romance",
+    "Science Fiction",
+    "Thriller",
+    "Western",
+    "Young Adult"
+  ],
 };
 
 export default function RootLayout({
