@@ -1,16 +1,17 @@
 import supabase from '@/lib/supabase'
 import { formatDate, formatContent } from '@/lib/utils'
 import { Metadata, ResolvingMetadata } from 'next'
-import NovelDetailClient from '@/app/novel/[id]/NovelDetailClient'
+import NovelDetailClient from './NovelDetailClient'
 
-// 定义 generateMetadata 的参数类型
+// 修改 Props 类型定义
 type Props = {
   params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
 }
 
 // 生成动态 metadata
 export async function generateMetadata(
-  { params }: Props,
+  { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const id = params.id
@@ -77,7 +78,10 @@ export async function generateStaticParams() {
 }
 
 // 服务端组件
-export default async function NovelDetail({ params }: { params: { id: string } }) {
+export default async function NovelDetail({
+  params,
+  searchParams,
+}: Props) {
   // 获取小说数据
   const { data: novel } = await supabase
     .from('novels')
