@@ -1,103 +1,126 @@
-"use client";
 import supabase from '@/lib/supabase'
 import { formatDate, formatContent } from '@/lib/utils'
-import Image from 'next/image'
-import { useParams } from 'next/navigation';
+import { Metadata, ResolvingMetadata } from 'next'
+import NovelDetailClient from '@/app/novel/[id]/NovelDetailClient'
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import GoogleAdsense from '@/components/GoogleAdsense'
-import { useEffect, useState } from 'react';
+// 定义 generateMetadata 的参数类型
+type Props = {
+  params: { id: string }
+}
 
-export default function NovelDetail() {
-  const params = useParams();
-  const id = params.id;
+// 生成动态 metadata
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const id = params.id
+  
+  // 获取小说数据
+  const { data: novel } = await supabase
+    .from('novels')
+    .select('*')
+    .eq('id', id)
+    .single()
 
-  const [novel, setNovel] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  useEffect(() => {
-    const fetchNovel = async () => {
-      if (id) {
-        const { data, error } = await supabase
-          .from('novels')
-          .select('*')
-          .eq('id', id)
-          .single();
-
-        if (error) {
-          console.error('Error fetching novel:', error);
-        } else {
-          setNovel(data);
-        }
-        setLoading(false);
-      }
-    };
-
-    fetchNovel();
-  }, [id]);
-
-  if (loading) {
-    return <div className="text-center text-2xl font-bold my-80">Loading...</div>;
+  if (!novel) {
+    return {
+      title: 'Novel Not Found - nicenovel.org',
+      description: 'The requested novel could not be found.Adventure Billionaire Christian Classic Fantasy Historical Horror Humorous Mystery New Adult Romance Science Fiction Thriller Western Young Adult. Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thoundsands of english novel, novel series, best author!',
+    }
   }
 
-  if (error || !novel) {
-    return <div className="text-center text-2xl font-bold my-80">Novel not found</div>;
+  // 生成关键词
+  const keywords = [
+    novel.title,
+    novel.author,
+    'novel',
+    'online reading',
+    'read novel',
+    'read novel online',
+    'read novel online free',
+    novel.tags, // 如果有标签字段
+  ].filter(Boolean)
+
+  return {
+    title: `${novel.title} - nicenovel.org - Read novels online free, free books online, read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thoundsands of english novel, novel series, best author!`,
+    description: novel.description || `Read ${novel.title}, author: ${novel.author}. Find more great novels on nicenovel.org.Adventure Billionaire Christian Classic Fantasy Historical Horror Humorous Mystery New Adult Romance Science Fiction Thriller Western Young Adult. Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. On nicenovel.org you can find thoundsands of english novel, novel series, best author!`,
+    keywords: keywords,
+    openGraph: {
+      title: novel.title,
+      description: novel.description,
+      type: 'article',
+      authors: [novel.author],
+      images: [
+        {
+          url: novel.cover || '/placeholder-cover.jpg',
+          width: 1200,
+          height: 630,
+          alt: novel.title,
+        },
+      ],
+    },
+    alternates: {
+      canonical: `https://nicenovel.org/novel/${id}`,
+    },
+  }
+}
+
+// 生成静态路径
+export async function generateStaticParams() {
+  const { data: novels } = await supabase
+    .from('novels')
+    .select('id')
+  
+  return novels?.map((novel) => ({
+    id: novel.id.toString(),
+  })) || []
+}
+
+// 服务端组件
+export default async function NovelDetail({ params }: { params: { id: string } }) {
+  // 获取小说数据
+  const { data: novel } = await supabase
+    .from('novels')
+    .select('*')
+    .eq('id', params.id)
+    .single()
+
+  if (!novel) {
+    return <div className="text-center text-2xl font-bold my-80">Novel not found</div>
+  }
+
+  // 添加结构化数据
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: novel.title,
+    author: {
+      '@type': 'Person',
+      name: novel.author,
+    },
+    datePublished: novel.created_at,
+    image: novel.cover || '/placeholder-cover.jpg',
+    description: novel.description,
+    publisher: {
+      '@type': 'Organization',
+      name: 'nicenovel.org',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://nicenovel.org/logo.png',
+      },
+    },
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* 在页面中使用 */}
-      {/* <GoogleAdsense /> */}
-
-      {/* Novel Content */}
-      <div className="container mx-auto px-4 pt-32 pb-24">
-        <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm md:p-8">
-          <Breadcrumb className="mb-6">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>novel: {formatContent(novel.title)}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-
-          <div className="relative h-[400px] sm:h-[440px] md:h-[480px]">
-            <Image 
-              src={novel.cover || '/placeholder-cover.jpg'} 
-              alt={novel.title} 
-              fill
-              className="object-cover object-center"
-              sizes="(max-width: 768px) 100vw, 768px"
-            />
-          </div>
-
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold my-2">{formatContent(novel.title)}</h1>
-            <div className="flex gap-4 text-gray-600 text-sm">
-              <span>By: {novel.author}</span>
-              <span>Published: {formatDate(novel.created_at)}</span>
-            </div>
-          </div>
-          
-          <div className="prose prose-gray max-w-none">
-            {formatContent(novel.content).map((paragraph, index) => (
-              <p key={index} className="mb-4 whitespace-pre-line">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    <>
+      {/* 注入结构化数据 */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      
+      {/* 客户端组件 */}
+      <NovelDetailClient initialNovel={novel} />
+    </>
+  )
 } 

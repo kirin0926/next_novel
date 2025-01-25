@@ -1,16 +1,78 @@
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart} from "lucide-react";
 import Link from "next/link";
 import supabase from '@/lib/supabase'
 import Image from "next/image";
+import { useEffect, useState, useCallback, useRef } from 'react';
 
-export default async function Home() {
-  
+// 定义小说类型
+interface Novel {
+  id: number;
+  title: string;
+  description: string;
+  cover: string;
+  like: number;
+}
+
+export default function Home() {
+  const [novels, setNovels] = useState<Novel[]>([]);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const loadingRef = useRef<HTMLDivElement>(null);
+  const PAGE_SIZE = 20;
+
+  // 获取小说数据
+  const fetchNovels = useCallback(async () => {
+    if (loading || !hasMore) return;
     
-  let { data: novels, error } = await supabase
-  .from('novels')
-  .select('*')
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('novels')
+        .select('*')
+        .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+      if (error) throw error;
+
+      if (data) {
+        if (data.length < PAGE_SIZE) {
+          setHasMore(false);
+        }
+        setNovels(prev => [...prev, ...data]);
+        setPage(prev => prev + 1);
+      }
+    } catch (error) {
+      console.error('Error fetching novels:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, loading, hasMore]);
+
+  // 初始加载
+  useEffect(() => {
+    fetchNovels();
+  }, []);
+
+  // 设置 Intersection Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchNovels();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loadingRef.current) {
+      observer.observe(loadingRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [fetchNovels]);
           
   return (
     <div className="flex flex-col">
@@ -34,7 +96,7 @@ export default async function Home() {
                 <CardHeader className="p-3 sm:p-6">
                   <div className="relative h-[120px] sm:h-[160px] md:h-[200px]">
                     <Image
-                      src={novel.cover || '/placeholder-cover.jpg'}
+                      src={novel.cover || '/placeholder-cover.png'}
                       alt={novel.title}
                       fill
                       className="object-cover rounded-t-lg"
@@ -56,6 +118,14 @@ export default async function Home() {
               </Card>
             </Link>
           ))}
+        </div>
+        
+        {/* Loading Indicator */}
+        <div ref={loadingRef} className="py-4 text-center">
+          {loading && <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>}
+          {!hasMore && novels.length > 0 && (
+            <p className="text-gray-600">没有更多小说了</p>
+          )}
         </div>
       </div>
     </div>
