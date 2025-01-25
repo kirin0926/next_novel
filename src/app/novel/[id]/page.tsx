@@ -1,12 +1,15 @@
 import supabase from '@/lib/supabase'
 import { formatDate, formatContent } from '@/lib/utils'
 import { Metadata, ResolvingMetadata } from 'next'
+import { redirect } from 'next/navigation'
+
+// import { params}
 import NovelDetailClient from './NovelDetailClient'
 
 // 修改 Props 类型定义
 type Props = {
-  params: { id: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 // 生成动态 metadata
@@ -14,7 +17,7 @@ export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const id = params.id
+  const id = (await params).id
   
   // 获取小说数据
   const { data: novel } = await supabase
@@ -86,7 +89,7 @@ export default async function NovelDetail({
   const { data: novel } = await supabase
     .from('novels')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', (await params).id)
     .single()
 
   if (!novel) {
