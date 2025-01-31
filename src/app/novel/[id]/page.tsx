@@ -74,42 +74,6 @@ export async function generateMetadata(
   }
 }
 
-// 获取静态路径
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   const { data: novels } = await supabase
-//     .from('novels')
-//     .select('id')
-
-//   const paths = novels?.map((novel) => ({
-//     params: { id: novel.id.toString() },
-//   })) || []
-
-//   return { paths, fallback: 'blocking' }
-// }
-
-// 获取静态属性
-// export const getStaticProps: GetStaticProps = async (context) => {
-//   const { id } = context.params as { id: string }
-//   const { data: novel } = await supabase
-//     .from('novels')
-//     .select('*')
-//     .eq('id', id)
-//     .single()
-
-//   if (!novel) {
-//     return {
-//       notFound: true,
-//     }
-//   }
-
-//   return {
-//     props: {
-//       novel,
-//     },
-//     revalidate: 60, // 每60秒重新生成页面
-//   }
-// }
-
 // 使用 supabase 获取数据并设置 revalidate
 export default async function NovelDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
