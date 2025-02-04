@@ -10,7 +10,7 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">about</h3>
             <p className="text-gray-600 mb-4">
-              Nice Novel ———— Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. 
+              Nice Novel ——— Read novels online free, free books online. Read books online free, read novels online free, read novel series online free. 
               On nicenovel.org you can find thoundsands of english novel, novel series, best author!
             </p>
             <div className="flex items-center gap-2">

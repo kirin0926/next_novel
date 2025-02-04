@@ -7,6 +7,7 @@ import Link from "next/link";
 import supabase from '@/lib/supabase'
 import Image from "next/image";
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 
 // 定义小说类型
 interface Novel {
@@ -24,6 +25,7 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true);
   const loadingRef = useRef<HTMLDivElement>(null);
   const PAGE_SIZE = 20;
+  const router = useRouter();
 
   // 获取小说数据
   const fetchNovels = useCallback(async () => {
@@ -34,22 +36,27 @@ export default function Home() {
       const { data, error } = await supabase
         .from('novels')
         .select('*')
-        .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+        .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)// 分页
+        .order('id', { ascending: true });// 按id排序
       if (error) throw error;
 
       if (data) {
-        if (data.length < PAGE_SIZE) {
+        const uniqueNovels = data.filter((novel) => 
+          !novels.some(existingNovel => existingNovel.id === novel.id)
+        );// 去重
+        
+        if (uniqueNovels.length < PAGE_SIZE) {
           setHasMore(false);
         }
-        setNovels(prev => [...prev, ...data]);
-        setPage(prev => prev + 1);
+        setNovels(prev => [...prev, ...uniqueNovels]);// 添加新的小说
+        setPage(prev => prev + 1);// 更新页码
       }
     } catch (error) {
       console.error('Error fetching novels:', error);
     } finally {
       setLoading(false);
     }
-  }, [page, loading, hasMore]);
+  }, [page, loading, hasMore, novels]);
 
   // 初始加载
   useEffect(() => {
@@ -58,7 +65,7 @@ export default function Home() {
 
   // 设置 Intersection Observer
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(// 观察loadingRef.current是否在视图中
       (entries) => {
         if (entries[0].isIntersecting) {
           fetchNovels();
@@ -76,13 +83,34 @@ export default function Home() {
           
   return (
     <div className="flex flex-col">
+      
       {/* Banner/Carousel Section */}
       <div className="mt-8 relative h-[300px] bg-gray-200">
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">Discover the World of Nice Novel Stories</h1>
-          <p className="text-lg md:text-xl text-gray-600">Enjoy Quality Reading Anytime, Anywhere</p>
-          {/* Add carousel component here */}
-
+          <p className="text-lg md:text-xl text-gray-600 mb-8">Enjoy Quality Reading Anytime, Anywhere</p>
+          
+          <div className="max-w-2xl mx-auto">
+            <div 
+              onClick={() => router.push('/search')}
+              className="flex items-center gap-2 p-2 rounded-lg border bg-white cursor-pointer hover:border-gray-400 transition-colors"
+            >
+              <svg 
+                className="w-5 h-5 text-gray-400"
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
+                />
+              </svg>
+              <span className="text-gray-400">search novels....</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -124,7 +152,7 @@ export default function Home() {
         <div ref={loadingRef} className="py-4 text-center">
           {loading && <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>}
           {!hasMore && novels.length > 0 && (
-            <p className="text-gray-600">没有更多小说了</p>
+            <p className="text-gray-600">no more novels</p>
           )}
         </div>
       </div>

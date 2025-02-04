@@ -14,7 +14,7 @@ import { formatDate, formatContent } from '@/lib/utils'
 interface NovelDetailClientProps {
   initialNovel: any; // 根据你的小说类型定义具体接口
 }
-
+// 小说详情页面
 export default function NovelDetailClient({ initialNovel }: NovelDetailClientProps) {
   return (
     <div className="min-h-screen flex flex-col">

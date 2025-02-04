@@ -21,10 +21,10 @@ export function Header() {
           <Link href="/" passHref>
             <Button variant="ghost">Home</Button>
           </Link>
-          {/* <Link href="/categories" passHref>
-            <Button variant="ghost">Categories</Button>
+          <Link href="/subscription" passHref>
+            <Button variant="ghost">Subscription</Button>
           </Link>
-          <Link href="/about" passHref>
+          {/* <Link href="/about" passHref>
             <Button variant="ghost">About</Button>
           </Link> */}
           {/* 其他导航按钮 */}
@@ -54,13 +54,13 @@ export function Header() {
                   Home
                 </Link>
               </Button>
-              {/* <Button variant="ghost" className="w-full justify-start text-base" asChild>
-                <Link href="/categories" className="flex items-center gap-2">
+              <Button variant="ghost" className="w-full justify-start text-base" asChild>
+                <Link href="/subscription" className="flex items-center gap-2">
                   <BookOpen className="h-5 w-5" />
-                  Categories
+                  Subscription
                 </Link>
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-base" asChild>
+              {/* <Button variant="ghost" className="w-full justify-start text-base" asChild>
                 <Link href="/about" className="flex items-center gap-2">
                   <Info className="h-5 w-5" />
                   About
