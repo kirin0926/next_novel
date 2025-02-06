@@ -82,17 +82,6 @@ export async function Header() {
                   Subscription
                 </Link>
               </Button>
-              {
-                // 未登录时，显示登录按钮
-                !userId && (
-                  <Button variant="ghost" className="w-full justify-start text-base" asChild>
-                    <Link href="/auth/sign-in" className="flex items-center gap-2">
-                      <LogInIcon className="h-5 w-5" />
-                      Login
-                    </Link>
-                  </Button>
-                )
-              }
           
               {/* 推广中心 */}
               {userId && (
@@ -104,10 +93,25 @@ export async function Header() {
                       Promotion
                     </Link>
                   </Button>
-                  {/* 用户按钮 */}
-                  <UserButton afterSignOutUrl="/"/>
+                  <Button variant="ghost" className="w-full justify-start text-base" asChild>
+                    <div className="flex items-center gap-2">
+                      <UserButton afterSignOutUrl="/"/>
+                    </div>
+                  </Button>
                 </>
               )}
+
+              {
+                // 未登录时，显示登录按钮
+                !userId && (
+                  <Button variant="ghost" className="w-full justify-start text-base" asChild>
+                    <Link href="/auth/sign-in" className="flex items-center gap-2">
+                      <LogInIcon className="h-5 w-5" />
+                      Login
+                    </Link>
+                  </Button>
+                )
+              }
               {/* 登录注册 */}
               {/* <Button variant="ghost" className="w-full justify-start text-base" asChild>
                 <SignedOut>

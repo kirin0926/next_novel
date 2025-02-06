@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
+import { Input } from '@/components/ui/input'
 import { formatDate, formatContent } from '@/lib/utils'
 import { useUser,SignIn } from "@clerk/nextjs";
 
@@ -38,14 +39,16 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
   const handlePromoteClick = () => {
     if (!isSignedIn) {
       // 未登录时重定向到登录页面
-      
-      return <SignIn />;
+      router.push('/auth/sign-in')
+      return;
     }
     
     // 用户已登录，打开对话框
     setIsDialogOpen(true)
   }
-
+  const handleSubmitClick = () => {
+    console.log('submit')
+  }
   return (
     <article className="relative min-h-screen">
       {/* 小说详情 */}
@@ -149,7 +152,10 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             <DialogDescription>
-              推广
+              <Input type="text" value={initialNovel.id} />
+              <Input type="text" value={user?.emailAddresses[0].emailAddress}/>
+              <Input type="text" placeholder='promotion code' />
+              <Button onClick={handleSubmitClick}>promote</Button>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

@@ -7,7 +7,7 @@ export default function SubscriptionPage() {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">choose your membership plan</h1>
           <p className="text-lg text-gray-600">unlock more interesting content and exclusive privileges</p>
-        </div>
+        </div> 
 
         <PlanList />
 
