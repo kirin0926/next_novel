@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, HomeIcon, BookOpen, Info } from "lucide-react";
+import { Menu, HomeIcon, BookOpen, Info, LogInIcon } from "lucide-react";
 import Link from "next/link";
 import {
     ClerkProvider,
@@ -11,6 +11,8 @@ import {
   
 } from '@clerk/nextjs'
 import { auth } from "@clerk/nextjs/server";
+// import { useState } from "react"
+// import { AuthDialog } from "@/components/auth/AuthDialog"
 
 export async function Header() {
   const { userId } = await auth();
@@ -28,18 +30,32 @@ export async function Header() {
             <Button variant="ghost">Subscription</Button>
           </Link>
           {/* 推广中心 */}
+          {/* 登录时，显示推广中心按钮和用户按钮 */}
           {userId && (
-            <Link href="/promotion" passHref>
-              <Button variant="ghost">Promotion</Button>
-            </Link>
+            <>
+              <Link href="/promotion" passHref>
+                <Button variant="ghost">Promotion</Button>
+              </Link>
+              {/* 用户按钮 */}
+              <UserButton afterSignOutUrl="/"/>
+            </>
           )}
+          
+          {/* 未登录时，显示登录按钮 */}
+          {
+            !userId && (
+              <Link href="/auth/sign-in" passHref>
+                <Button variant="ghost">Login</Button>
+              </Link>
+            )
+          }
           {/* 其他导航按钮 */}
-          <SignedOut>
+          {/* <SignedOut>
             <SignInButton />
           </SignedOut>
           <SignedIn>
             <UserButton afterSignOutUrl="/"/>
-          </SignedIn>
+          </SignedIn> */}
         </div>
 
         {/* Mobile Navigation */}
@@ -66,17 +82,34 @@ export async function Header() {
                   Subscription
                 </Link>
               </Button>
+              {
+                // 未登录时，显示登录按钮
+                !userId && (
+                  <Button variant="ghost" className="w-full justify-start text-base" asChild>
+                    <Link href="/auth/sign-in" className="flex items-center gap-2">
+                      <LogInIcon className="h-5 w-5" />
+                      Login
+                    </Link>
+                  </Button>
+                )
+              }
+          
               {/* 推广中心 */}
               {userId && (
-                <Button variant="ghost" className="w-full justify-start text-base" asChild>
-                  <Link href="/promotion" className="flex items-center gap-2">
-                    <Info className="h-5 w-5" />
-                    Promotion
-                  </Link>
-                </Button>
+                // 登录时，显示推广中心按钮和用户按钮
+                <>
+                  <Button variant="ghost" className="w-full justify-start text-base" asChild>
+                    <Link href="/promotion" className="flex items-center gap-2">
+                      <Info className="h-5 w-5" />
+                      Promotion
+                    </Link>
+                  </Button>
+                  {/* 用户按钮 */}
+                  <UserButton afterSignOutUrl="/"/>
+                </>
               )}
               {/* 登录注册 */}
-              <Button variant="ghost" className="w-full justify-start text-base" asChild>
+              {/* <Button variant="ghost" className="w-full justify-start text-base" asChild>
                 <SignedOut>
                   <SignInButton />
                 </SignedOut>
@@ -85,9 +118,9 @@ export async function Header() {
                 <SignedIn>
                   <UserButton afterSignOutUrl="/"/>
                 </SignedIn>
-              </Button>
+              </Button> */}
             </div>
-          </SheetContent>
+          </SheetContent> 
         </Sheet>
       </div>
     </header>

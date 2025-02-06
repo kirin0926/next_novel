@@ -83,7 +83,7 @@ export default async function NovelPage({ params }: { params: Promise<{ id: stri
   // 获取小说数据
   const { data: novel } = await supabase
     .from('novels')
-    .select('*')
+    .select('*') // 扩展查询
     .eq('id', id)
     .single()
 
@@ -91,11 +91,11 @@ export default async function NovelPage({ params }: { params: Promise<{ id: stri
     return <div>Novel Not Found</div>
   }
 
-  // 添加结构化数据
+  // 扩展结构化数据
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: novel.title,
+    '@type': 'Book', // 改为更适合的类型
+    name: novel.title,
     author: {
       '@type': 'Person',
       name: novel.author,
@@ -111,19 +111,25 @@ export default async function NovelPage({ params }: { params: Promise<{ id: stri
         url: 'https://nicenovel.org/logo.png',
       },
     },
+    genre: novel.genres?.map((g: any) => g.name),
+    inLanguage: 'en',
+    isPartOf: {
+      '@type': 'Series',
+      name: novel.series_name
+    },
+    numberOfPages: novel.chapters?.length,
+    // 添加更多相关属性...
   }
 
   return (
     <>
-      {/* 注入结构化数据 */}
       <script 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      
-      {/* 客户端组件 */}
       <NovelDetailClient 
         initialNovel={novel}
+        relatedNovels={novel.related_novels}
       />
     </>
   )
