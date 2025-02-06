@@ -3,6 +3,7 @@ import { formatDate, formatContent } from '@/lib/utils'
 import { Metadata, ResolvingMetadata } from 'next'
 import { redirect } from 'next/navigation'
 import { GetStaticProps, GetStaticPaths } from 'next'
+// import { useUser } from '@/lib/useAuth'
 
 // import { params}
 import NovelDetailClient from './NovelDetailClient'
@@ -75,7 +76,8 @@ export async function generateMetadata(
 }
 
 // 使用 supabase 获取数据并设置 revalidate
-export default async function NovelDetail({ params }: { params: Promise<{ id: string }> }) {
+export default async function NovelPage({ params }: { params: Promise<{ id: string }> })  {
+  // const { userId } = useUser()
   const { id } = await params
 
   // 获取小说数据
@@ -114,13 +116,15 @@ export default async function NovelDetail({ params }: { params: Promise<{ id: st
   return (
     <>
       {/* 注入结构化数据 */}
-      <script
+      <script 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
       {/* 客户端组件 */}
-      <NovelDetailClient initialNovel={novel} />
+      <NovelDetailClient 
+        initialNovel={novel}
+      />
     </>
   )
 } 

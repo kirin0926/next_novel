@@ -3,14 +3,17 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Menu, HomeIcon, BookOpen, Info } from "lucide-react";
 import Link from "next/link";
 import {
-  ClerkProvider,
+    ClerkProvider,
   SignInButton,
   SignedIn,
   SignedOut,
   UserButton
+  
 } from '@clerk/nextjs'
+import { auth } from "@clerk/nextjs/server";
 
-export function Header() {
+export async function Header() {
+  const { userId } = await auth();
   return (
     <header className="fixed top-0 w-full border-b z-50 bg-background">
       <div className="container flex h-16 items-center justify-between px-4 mx-auto">
@@ -24,9 +27,12 @@ export function Header() {
           <Link href="/subscription" passHref>
             <Button variant="ghost">Subscription</Button>
           </Link>
-          {/* <Link href="/about" passHref>
-            <Button variant="ghost">About</Button>
-          </Link> */}
+          {/* 推广中心 */}
+          {userId && (
+            <Link href="/promotion" passHref>
+              <Button variant="ghost">Promotion</Button>
+            </Link>
+          )}
           {/* 其他导航按钮 */}
           <SignedOut>
             <SignInButton />
@@ -60,12 +66,16 @@ export function Header() {
                   Subscription
                 </Link>
               </Button>
-              {/* <Button variant="ghost" className="w-full justify-start text-base" asChild>
-                <Link href="/about" className="flex items-center gap-2">
-                  <Info className="h-5 w-5" />
-                  About
-                </Link>
-              </Button> */}
+              {/* 推广中心 */}
+              {userId && (
+                <Button variant="ghost" className="w-full justify-start text-base" asChild>
+                  <Link href="/promotion" className="flex items-center gap-2">
+                    <Info className="h-5 w-5" />
+                    Promotion
+                  </Link>
+                </Button>
+              )}
+              {/* 登录注册 */}
               <Button variant="ghost" className="w-full justify-start text-base" asChild>
                 <SignedOut>
                   <SignInButton />

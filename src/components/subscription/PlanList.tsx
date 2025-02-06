@@ -4,6 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import { useState } from "react";
+import { loadStripe } from '@stripe/stripe-js';
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from 'next/navigation';
+// 确保替换为你的 Stripe publishable key
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 // 订阅计划接口
 interface Plan {
@@ -17,7 +22,7 @@ interface Plan {
 
 const plans: Plan[] = [
   {
-    id: 'basic',
+    id: 'price_1QbJSvDISTrmdpg8xbbHDFJJ',
     name: 'basic membership',
     price: 9.99,
     interval: 'month',
@@ -29,7 +34,7 @@ const plans: Plan[] = [
     description: 'suitable for light reading users'
   },
   {
-    id: 'pro',
+    id: 'price_1QbJSvDISTrmdpg8Pxx5tL0z',
     name: 'professional membership',
     price: 19.99,
     interval: 'month',
@@ -43,7 +48,7 @@ const plans: Plan[] = [
     description: 'suitable for heavy reading users'
   },
   {
-    id: 'premium',
+    id: 'price_1QcoXNDISTrmdpg8GrpPO1LU',
     name: 'premium membership',
     price: 29.99,
     interval: 'month', 
@@ -61,11 +66,55 @@ const plans: Plan[] = [
 ];
 
 export function PlanList() {
+  const router = useRouter();
+  const { isLoaded, isSignedIn, user } = useUser();
   const [selectedPlan, setSelectedPlan] = useState<string>('pro');
+  const [loading, setLoading] = useState(false);
 
   const handleSubscribe = async (planId: string) => {
-    // TODO: 实现支付流程
-    console.log(`Subscribe to plan: ${planId}`);
+    try {
+      if (!isLoaded) return;
+      
+      if (!isSignedIn) {
+        router.push('/sign-in');
+        return;
+      }
+
+      setLoading(true);
+      
+      // 继续订阅流程...
+      const response = await fetch('/api/create-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          planId: planId,
+          customerEmail: user.emailAddresses[0].emailAddress 
+        }),
+      });
+
+      const { sessionId, error } = await response.json();
+      
+      if (error) throw new Error(error);
+
+      // 获取 Stripe 实例
+      const stripe = await stripePromise;
+      if (!stripe) throw new Error('Stripe failed to initialize');
+
+      // 重定向到 Checkout 页面
+      const { error: stripeError } = await stripe.redirectToCheckout({
+        sessionId,
+      });
+
+      if (stripeError) throw stripeError;
+
+    } catch (error) {
+      console.error('Subscription error:', error);
+      // 这里可以添加错误提示
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -82,7 +131,7 @@ export function PlanList() {
           <CardHeader>
             <CardTitle className="text-2xl">{plan.name}</CardTitle>
             <div className="text-3xl font-bold mt-4">
-              ¥{plan.price}<span className="text-lg font-normal">/{plan.interval}</span>
+              ${plan.price}<span className="text-lg font-normal">/{plan.interval}</span>
             </div>
             <p className="text-sm text-gray-600 mt-2">{plan.description}</p>
           </CardHeader>
@@ -101,8 +150,9 @@ export function PlanList() {
               className="w-full"
               variant={selectedPlan === plan.id ? 'default' : 'outline'}
               onClick={() => handleSubscribe(plan.id)}
+              disabled={loading}
             >
-              {selectedPlan === plan.id ? 'subscribe now' : 'choose plan'}
+              {loading ? 'Processing...' : selectedPlan === plan.id ? 'Subscribe Now' : 'Choose Plan'}
             </Button>
           </CardFooter>
         </Card>
