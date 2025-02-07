@@ -20,20 +20,47 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
-    if (!query.trim()) return;// 如果查询为空，则返回
-    
-    setLoading(true);// 设置loading为true
-    try {
-      const { data, error } = await supabase
-        .from('novels')
-        .select('*')
-        .or(`title.ilike.%${query}%,author.ilike.%${query}%`)
-        .limit(20);
+    if (!query.trim()) return; // 如果查询为空，则返回
 
-      if (error) throw error;
-      setResults(data || []);
+    setLoading(true); // 设置loading为true
+    try {
+      let data, error;
+      if (/^\d+$/.test(query)) {
+        // 首先查询 promotions 表
+        const { data: promotionData, error: promotionError } = await supabase
+          .from('promotions')
+          .select('*')
+          .eq('promotion_code', query)
+          .limit(20);
+
+        if (promotionError) throw promotionError;
+        // console.log(promotionData)
+        if (promotionData && promotionData.length > 0) {
+          // 使用获取到的 novel_id 查询 novels 表
+          const { data: novelData, error: novelError } = await supabase
+            .from('novels')
+            .select('*')
+            .eq('id', promotionData[0].novel_id)
+            .single();
+
+          if (novelError) throw novelError;
+          // console.log(novelData)
+          setResults(novelData ? [novelData] : []);
+        }
+      } else {
+        // 原有的 novels 表查询逻辑
+        ({ data, error } = await supabase
+          .from('novels')
+          .select('*')
+          .or(`title.ilike.%${query}%,author.ilike.%${query}%`)
+          .limit(20));
+
+        // console.log(data)
+        if (error) throw error;
+        setResults(data || []);
+      }
     } catch (error) {
-      console.error('搜索错误:', error);
+      console.error('search error:', error);
     } finally {
       setLoading(false);
     }
@@ -65,6 +92,7 @@ export default function SearchPage() {
         {loading ? (
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+            <p>Searching...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -53,7 +53,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <head>
+        <head> 
         {process.env.NODE_ENV === 'production' && (
           <>
             <script

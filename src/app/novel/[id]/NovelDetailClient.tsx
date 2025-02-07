@@ -23,17 +23,19 @@ import { useRouter } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { formatDate, formatContent } from '@/lib/utils'
 import { useUser,SignIn } from "@clerk/nextjs";
+import supabase from '@/lib/supabase';
 
 interface NovelDetailClientProps {
-  initialNovel: any;
-  relatedNovels: any[];
+  initialNovel: any;// 小说详情
+  relatedNovels: any[];// 相关小说
 }
 
 // 小说详情页面
 export default function NovelDetailClient({ initialNovel, relatedNovels }: NovelDetailClientProps) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const router = useRouter()
-  const { user, isLoaded, isSignedIn } = useUser()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)// 推广对话框
+  const router = useRouter()// 路由
+  const { user, isLoaded, isSignedIn } = useUser()// 用户
+  const [promotionCode, setPromotionCode] = useState('')
 
   // 推广点击事件
   const handlePromoteClick = () => {
@@ -42,12 +44,29 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
       router.push('/auth/sign-in')
       return;
     }
-    
     // 用户已登录，打开对话框
     setIsDialogOpen(true)
   }
-  const handleSubmitClick = () => {
+
+  // 提交
+  const handleSubmitClick = async () => {
     console.log('submit')
+    try {
+      // 用户点击提交的时候，将用户推广的小说ID，email，promotionCode写入数据库
+      const { data, error } = await supabase
+      .from('promotions')
+      .insert({
+        novel_id: '665',
+        promoter_phone: user?.emailAddresses[0].emailAddress,
+        promotion_code: promotionCode,
+      })
+      if (error) throw error
+      console.log('Promotion inserted successfully:', data)
+    } catch (error) {
+      console.error('Error inserting promotion:', error)
+    }
+    
+    
   }
   return (
     <article className="relative min-h-screen">
@@ -111,7 +130,7 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
               ))}
             </section>
 
-            <section className="mt-12">
+            {/* <section className="mt-12">
               <h2 className="text-2xl font-bold mb-4">Related Novels</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {relatedNovels?.map((novel: any) => (
@@ -131,7 +150,7 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
                   </a>
                 ))}
               </div>
-            </section>
+            </section> */}
           </div> 
         </main>
       </div>
@@ -144,7 +163,7 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
         >
           promotion
         </Button>
-      </div>
+      </div> 
 
       {/* 推广对话框 */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -152,10 +171,45 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             <DialogDescription>
-              <Input type="text" value={initialNovel.id} />
-              <Input type="text" value={user?.emailAddresses[0].emailAddress}/>
-              <Input type="text" placeholder='promotion code' />
-              <Button onClick={handleSubmitClick}>promote</Button>
+              <div className="space-y-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700 text-left">Novel ID</label>
+                  <Input 
+                    type="text" 
+                    value={initialNovel.id} 
+                    disabled 
+                    className="bg-gray-50"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700 text-left">Email</label>
+                  <Input 
+                    type="text" 
+                    value={user?.emailAddresses[0].emailAddress}
+                    disabled
+                    className="bg-gray-50"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700 text-left">Promotion Code</label>
+                  <Input 
+                    type="text" 
+                    value={promotionCode}
+                    onChange={(e) => setPromotionCode(e.target.value)}
+                    placeholder="Enter promotion code, empty for auto-generated" 
+                    className="focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <Button 
+                  onClick={handleSubmitClick}
+                  className="w-full bg-gray-700 hover:bg-gray-700 text-white font-medium py-2 rounded-md transition-colors"
+                >
+                  Generate Promotion Code
+                </Button>
+              </div>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

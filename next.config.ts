@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
         hostname: 'img.novel-master.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'realnovel.sereal.com',
+        pathname: '/**',
+      },
     ],
   },
 };
