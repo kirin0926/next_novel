@@ -50,24 +50,32 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
 
   // 提交
   const handleSubmitClick = async () => {
-    console.log('submit')
     try {
-      // 用户点击提交的时候，将用户推广的小说ID，email，promotionCode写入数据库
-      const { data, error } = await supabase
-      .from('promotions')
-      .insert({
-        novel_id: '665',
+      // 构建插入数据对象
+      const insertData: any = {
+        novel_id: initialNovel.id,
         promoter_phone: user?.emailAddresses[0].emailAddress,
-        promotion_code: promotionCode,
-      })
+      }
+      
+      // 只有当 promotionCode 不为空时才添加到提交数据中
+      if (promotionCode.trim()) {
+        insertData.promotion_code = promotionCode
+      }
+
+      const { data, error } = await supabase
+        .from('promotions')
+        .insert(insertData)
+
       if (error) throw error
-      console.log('Promotion inserted successfully:', data)
+
+      // console.log('Promotion inserted successfully:', data)
+      setIsDialogOpen(false)
+      
     } catch (error) {
       console.error('Error inserting promotion:', error)
     }
-    
-    
   }
+  
   return (
     <article className="relative min-h-screen">
       {/* 小说详情 */}
@@ -106,7 +114,8 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
                 </time>
               </div>
               
-              <div className="mt-4">
+              <div className="mt-4 hidden">
+                {/* 小说类型 */}
                 <h2 className="text-lg font-semibold">Genres:</h2>
                 <div className="flex gap-2 mt-2">
                   {initialNovel.genres?.map((genre: any) => (
@@ -130,7 +139,9 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
               ))}
             </section>
 
-            {/* <section className="mt-12">
+            {/* 
+            // 相关小说
+            <section className="mt-12">
               <h2 className="text-2xl font-bold mb-4">Related Novels</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {relatedNovels?.map((novel: any) => (
@@ -155,7 +166,7 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
         </main>
       </div>
       
-      {/* 推广按钮 */}
+      {/* 推广按钮  */}
       <div className="fixed bottom-8 right-8 z-50">
           <Button
             className="rounded-full shadow-lg"

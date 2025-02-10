@@ -42,7 +42,7 @@ export default function NovelList({ initialNovels }: NovelListProps) {
         .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)// 分页
         .order('id', { ascending: true });// 按id排序
       if (error) throw error;
-      console.log(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
+      // console.log(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
       if (data) {
         const uniqueNovels = data.filter((novel) => 
           !novels.some(existingNovel => existingNovel.id === novel.id)

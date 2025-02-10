@@ -122,7 +122,7 @@ export default async function NovelPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <>
+    <> 
       <script 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
