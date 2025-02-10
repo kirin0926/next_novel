@@ -118,41 +118,54 @@ export function PlanList() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 py-8">
       {plans.map((plan) => (
-        <Card 
+        <Card
           key={plan.id}
-          className={`relative ${
+          className={`relative flex flex-col ${
             selectedPlan === plan.id 
-              ? 'border-primary shadow-lg scale-105' 
-              : 'hover:shadow-md'
-          } transition-all duration-200`}
+              ? 'border-primary shadow-xl sm:scale-105 z-10' 
+              : 'hover:shadow-lg hover:scale-102'
+          } transition-all duration-300`}
         >
-          <CardHeader>
-            <CardTitle className="text-2xl">{plan.name}</CardTitle>
-            <div className="text-3xl font-bold mt-4">
-              ${plan.price}<span className="text-lg font-normal">/{plan.interval}</span>
+          {plan.name === 'professional membership' && (
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium">
+              Most Popular
             </div>
-            <p className="text-sm text-gray-600 mt-2">{plan.description}</p>
+          )}
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold capitalize">{plan.name}</CardTitle>
+            <div className="mt-6">
+              <span className="text-4xl font-bold">${plan.price}</span>
+              <span className="text-lg text-muted-foreground">/{plan.interval}</span>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
           </CardHeader>
-          <CardContent>
-            <ul className="space-y-3">
+          <CardContent className="flex-grow">
+            <ul className="space-y-4">
               {plan.features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <Check className="h-5 w-5 text-green-500" />
-                  <span>{feature}</span>
+                <li key={index} className="flex items-start gap-3">
+                  <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  <span className="text-sm">{feature}</span>
                 </li>
               ))}
             </ul>
           </CardContent>
           <CardFooter>
             <Button 
-              className="w-full"
+              className="w-full text-base font-medium"
+              size="lg"
               variant={selectedPlan === plan.id ? 'default' : 'outline'}
               onClick={() => handleSubscribe(plan.id)}
               disabled={loading}
             >
-              {loading ? 'Processing...' : selectedPlan === plan.id ? 'Subscribe Now' : 'Choose Plan'}
+              {loading ? 
+                <span className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  Processing...
+                </span> : 
+                selectedPlan === plan.id ? 'Subscribe Now' : 'Choose Plan'
+              }
             </Button>
           </CardFooter>
         </Card>

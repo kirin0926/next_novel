@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import {
   Breadcrumb,
@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/input'
 import { formatDate, formatContent } from '@/lib/utils'
 import { useUser,SignIn } from "@clerk/nextjs";
 import supabase from '@/lib/supabase';
+import { PlanList } from '@/components/subscription/PlanList'
 
 interface NovelDetailClientProps {
   initialNovel: any;// 小说详情
@@ -36,6 +37,63 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
   const router = useRouter()// 路由
   const { user, isLoaded, isSignedIn } = useUser()// 用户
   const [promotionCode, setPromotionCode] = useState('')
+  const [isSubscribed, setIsSubscribed] = useState(false)
+  const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
+
+  // 检查用户是否已订阅
+  useEffect(() => {
+    const checkSubscription = async () => {
+      if (!isSignedIn) return;
+      
+      // const { data, error } = await supabase
+      //   .from('subscriptions')
+      //   .select('*')
+      //   .eq('user_email', user?.emailAddresses[0].emailAddress)
+      //   .eq('novel_id', initialNovel.id)
+      //   .single();
+        
+      // if (data) setIsSubscribed(true);
+    };
+    
+    checkSubscription();
+  }, [isSignedIn, user, initialNovel.id]);
+
+  // 处理订阅点击
+  const handleSubscribe = async () => {
+    if (!isSignedIn) {
+      router.push('/auth/sign-in');
+      return;
+    }
+
+    // 打开订阅对话框
+    setShowSubscriptionDialog(true);
+  };
+
+  // 获取处理后的内容
+  const getProcessedContent = () => {
+    const fullContent = formatContent(initialNovel.content);
+    const totalLength = fullContent.join('').length;
+    
+    if (isSubscribed) return fullContent;
+
+    let currentLength = 0;
+    const previewContent = [];
+
+    for (const paragraph of fullContent) {
+      if (currentLength + paragraph.length <= 3000) {
+        previewContent.push(paragraph);
+        currentLength += paragraph.length;
+      } else {
+        const remainingChars = 3000 - currentLength;
+        if (remainingChars > 0) {
+          previewContent.push(paragraph.slice(0, remainingChars) + '...');
+        }
+        break;
+      }
+    }
+    
+    return previewContent;
+  };
 
   // 推广点击事件
   const handlePromoteClick = () => {
@@ -132,11 +190,21 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
             </header>
             
             <section className="prose prose-gray max-w-none">
-              {formatContent(initialNovel.content).map((paragraph, index) => (
+              {getProcessedContent().map((paragraph, index) => (
                 <p key={index} className="mb-4 whitespace-pre-line">
                   {paragraph}
                 </p>
               ))}
+              
+              {!isSubscribed && (
+                <div className="mt-8 p-6 bg-gray-50 rounded-lg text-center">
+                  <h3 className="text-xl font-semibold mb-4">Subscribe to continue reading</h3>
+                  <p className="text-gray-600 mb-4">
+                    You have read the first 3000 words, subscribe to continue reading
+                  </p>
+                  <PlanList />
+                </div>
+              )}
             </section>
 
             {/* 
@@ -223,6 +291,19 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
               </div>
             </DialogDescription>
           </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+      {/* 订阅对话框 */}
+      <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>选择订阅计划</DialogTitle>
+            <DialogDescription>
+              选择一个适合您的订阅计划以继续阅读
+            </DialogDescription>
+          </DialogHeader>
+          <PlanList />
         </DialogContent>
       </Dialog>
 
