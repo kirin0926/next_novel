@@ -19,20 +19,20 @@ export async function POST(request: Request) {
 
     // 创建 Stripe Checkout 会话
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      customer_email: customerEmail,
+      payment_method_types: ['card'],// 支付方式
+      customer_email: customerEmail,// 客户邮箱
       line_items: [
         {
-          price: planId,
-          quantity: 1,
+          price: planId,// 价格
+          quantity: 1,// 数量
         },
       ],
-      mode: 'subscription',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/cancel`,
+      mode: 'subscription',// 模式
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,// 成功URL
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/cancel`,// 取消URL
     });
 
-    return NextResponse.json({ sessionId: session.id });
+    return NextResponse.json({ sessionId: session.id });// 返回会话ID
   } catch (error: any) {
     console.error('Stripe error:', error.message);
     return NextResponse.json(

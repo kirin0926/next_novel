@@ -10,15 +10,15 @@ interface SubscriptionDetails {
 }
 
 export default function SuccessPage() {
-  const searchParams = useSearchParams();
-  const sessionId = searchParams.get('session_id');
-  const [details, setDetails] = useState<SubscriptionDetails | null>(null);
-  const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();// 获取搜索参数
+  const sessionId = searchParams.get('session_id');// 获取session_id
+  const [details, setDetails] = useState<SubscriptionDetails | null>(null);// 订阅详情
+  const [loading, setLoading] = useState(true);// 加载状态
 
   useEffect(() => {
     if (sessionId) {
-      fetch(`/api/subscription-status?session_id=${sessionId}`)
-        .then(res => res.json())
+      fetch(`/api/subscription-status?session_id=${sessionId}`)// 获取订阅详情
+        .then(res => res.json())// 获取响应
         .then(data => {
           setDetails(data);
           setLoading(false);

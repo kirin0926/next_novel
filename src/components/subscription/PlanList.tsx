@@ -118,13 +118,13 @@ export function PlanList() {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 py-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 py-8">
       {plans.map((plan) => (
         <Card
           key={plan.id}
           className={`relative flex flex-col ${
             selectedPlan === plan.id 
-              ? 'border-primary shadow-xl sm:scale-105 z-10' 
+              ? 'border-primary shadow-xl  z-10' 
               : 'hover:shadow-lg hover:scale-102'
           } transition-all duration-300`}
         >
