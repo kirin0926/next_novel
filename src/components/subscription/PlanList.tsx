@@ -76,7 +76,8 @@ export function PlanList() {
       if (!isLoaded) return;
       
       if (!isSignedIn) {
-        router.push('/sign-in');
+        // 未登录时重定向到登录页面
+        router.push('/auth/sign-in')
         return;
       }
 
