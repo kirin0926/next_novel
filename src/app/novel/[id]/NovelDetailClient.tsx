@@ -33,12 +33,12 @@ interface NovelDetailClientProps {
 
 // 小说详情页面
 export default function NovelDetailClient({ initialNovel, relatedNovels }: NovelDetailClientProps) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)// 推广对话框
   const router = useRouter()// 路由
+  const [isDialogOpen, setIsDialogOpen] = useState(false)// 推广对话框
   const { user, isLoaded, isSignedIn } = useUser()// 用户
   const [promotionCode, setPromotionCode] = useState('')
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
+  // const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
 
   // 检查用户是否已订阅
   useEffect(() => {
@@ -59,15 +59,15 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
   }, [isSignedIn, user, initialNovel.id]);
 
   // 处理订阅点击
-  const handleSubscribe = async () => {
-    if (!isSignedIn) {
-      router.push('/auth/sign-in');
-      return;
-    }
+  // const handleSubscribe = async () => {
+  //   if (!isSignedIn) {
+  //     router.push('/auth/sign-in');
+  //     return;
+  //   }
 
-    // 打开订阅对话框
-    setShowSubscriptionDialog(true);
-  };
+  //   // 打开订阅对话框
+  //   setShowSubscriptionDialog(true);
+  // };
 
   // 获取处理后的内容
   const getProcessedContent = () => {
@@ -106,7 +106,7 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
     setIsDialogOpen(true)
   }
 
-  // 提交
+  // 提交推广
   const handleSubmitClick = async () => {
     try {
       // 构建插入数据对象
@@ -295,7 +295,7 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
       </Dialog>
 
       {/* 订阅对话框 */}
-      <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
+      {/* <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>选择订阅计划</DialogTitle>
@@ -305,7 +305,7 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
           </DialogHeader>
           <PlanList />
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
     </article>
   );

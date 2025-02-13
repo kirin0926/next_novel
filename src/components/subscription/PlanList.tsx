@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loadStripe } from '@stripe/stripe-js';
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from 'next/navigation';
@@ -20,56 +20,34 @@ interface Plan {
   description: string;
 }
 
-const plans: Plan[] = [
-  {
-    id: 'price_1QbJSvDISTrmdpg8xbbHDFJJ',
-    name: 'basic membership',
-    price: 9.99,
-    interval: 'month',
-    features: [
-      'unlimited reading novels',
-      'remove ads',
-      'basic membership identifier'
-    ],
-    description: 'suitable for light reading users'
-  },
-  {
-    id: 'price_1QbJSvDISTrmdpg8Pxx5tL0z',
-    name: 'professional membership',
-    price: 19.99,
-    interval: 'month',
-    features: [
-      'unlimited reading novels',
-      'remove ads',
-      'professional membership identifier',
-      'offline download',
-      'advanced formatting mode'
-    ],
-    description: 'suitable for heavy reading users'
-  },
-  {
-    id: 'price_1QcoXNDISTrmdpg8GrpPO1LU',
-    name: 'premium membership',
-    price: 29.99,
-    interval: 'month', 
-    features: [
-      'unlimited reading novels',
-      'remove ads',
-      'premium membership identifier',
-      'offline download',
-      'advanced formatting mode',
-      'priority updates',
-      'exclusive customer service'
-    ],
-    description: 'enjoy the best reading experience'
-  }
-];
-
 export function PlanList() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   const [selectedPlan, setSelectedPlan] = useState<string>('pro');
   const [loading, setLoading] = useState(false);
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [isLoadingPlans, setIsLoadingPlans] = useState(true);
+
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const response = await fetch('/api/get-prices');
+        const data = await response.json();
+        if (data.prices) {
+          // 按照价格从低到高排序
+          const sortedPlans = data.prices.sort((a: Plan, b: Plan) => a.price - b.price);
+          setPlans(sortedPlans);
+          console.log('plans', sortedPlans);
+        }
+      } catch (error) {
+        console.error('Error fetching prices:', error);
+      } finally {
+        setIsLoadingPlans(false);
+      }
+    };
+
+    fetchPrices();
+  }, []);
 
   const handleSubscribe = async (planId: string) => {
     try {
@@ -117,6 +95,14 @@ export function PlanList() {
       setLoading(false);
     }
   };
+
+  if (isLoadingPlans) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 py-8">
