@@ -24,18 +24,33 @@ export async function handleStripeWebhook(req: any, res: any) {// 处理Stripe W
     const session = event.data.object as Stripe.Checkout.Session
     
     // 更新数据库中的订阅状态
-    const { error } = await supabase
+    const { error: subscriptionError } = await supabase
       .from('subscriptions')
       .insert({
         user_id: session.client_reference_id,   
         stripe_subscription_id: session.subscription,
         plan_id: session.metadata?.plan_id,
         status: 'active',
-        // current_period_end: new Date(session.subscription?.current_period_end * 1000)
       })
+
+    // 如果存在推广码,保存推广记录
+    if (session.metadata?.promotion_code) {
+      const { error: websubError } = await supabase
+        .from('websubscriptions')
+        .insert({
+          subscription_id: session.subscription,
+          promotion_code: session.metadata.promotion_code,
+          customer_email: session.customer_email,
+          created_at: new Date().toISOString()
+        })
+
+      if (websubError) {
+        console.error('Error saving promotion record:', websubError)
+      }
+    }
       
-    if (error) {
-      console.error('Error updating subscription:', error)
+    if (subscriptionError) {
+      console.error('Error updating subscription:', subscriptionError)
       return res.status(500).json({ error: 'Error updating subscription' })
     }
   }

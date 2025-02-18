@@ -19,7 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { formatDate, formatContent } from '@/lib/utils'
 import { useUser,SignIn } from "@clerk/nextjs";
@@ -36,9 +36,13 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
   const router = useRouter()// 路由
   const [isDialogOpen, setIsDialogOpen] = useState(false)// 推广对话框
   const { user, isLoaded, isSignedIn } = useUser()// 用户
-  const [promotionCode, setPromotionCode] = useState('')
-  const [isSubscribed, setIsSubscribed] = useState(false)
-  // const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
+  const [promotionCode, setPromotionCode] = useState('')// 推广码
+  const [isSubscribed, setIsSubscribed] = useState(false)// 是否订阅
+  const searchParams = useSearchParams();// 搜索参数
+
+  // 获取 promotion_code 和 promotion_email 参数
+  const promotionCodeFromParams = searchParams.get('promotion_code') || '';// 推广码
+  const promotionEmailFromParams = searchParams.get('promotion_email') || '';// 推广邮箱
 
   // 检查用户是否已订阅
   useEffect(() => {
@@ -136,7 +140,7 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
   
   return (
     <article className="relative min-h-screen">
-      {/* 小说详情 */}
+      {/* 小说详情 */}  
       <div className="min-h-screen flex flex-col">
         <main className="container mx-auto px-4 pt-32 pb-24">
           <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm md:p-8">
@@ -202,7 +206,10 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
                   <p className="text-gray-600 mb-4">
                     You have read the first 3000 words, subscribe to continue reading
                   </p>
-                  <PlanList />
+                  <PlanList 
+                    promotionCode={promotionCodeFromParams} 
+                    promotionEmail={promotionEmailFromParams} 
+                  />
                 </div>
               )}
             </section>

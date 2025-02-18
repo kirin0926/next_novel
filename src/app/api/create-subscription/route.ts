@@ -8,7 +8,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 
 export async function POST(request: Request) {
   try {
-    const { planId, customerEmail } = await request.json();
+    const { planId, customerEmail, promotionCode,promotionEmail } = await request.json();
     
     if (!planId) {
       return NextResponse.json(
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     // 创建 Stripe Checkout 会话
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],// 支付方式
-      customer_email: customerEmail,// 客户邮箱
+      // customer_email: customerEmail,// 客户邮箱
       line_items: [
         {
           price: planId,// 价格
@@ -28,8 +28,12 @@ export async function POST(request: Request) {
         },
       ],
       mode: 'subscription',// 模式
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,// 成功URL
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}&promotion_code=${promotionCode || ''}`,// 成功URL
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/cancel`,// 取消URL
+      metadata: {
+        promotion_code: promotionCode, // 将推广码保存到 metadata
+        promotion_email: promotionEmail, // 将推广邮箱保存到 metadata
+      }
     });
 
     return NextResponse.json({ sessionId: session.id });// 返回会话ID

@@ -18,7 +18,7 @@ export default function SearchPage() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Novel[]>([]);
   const [loading, setLoading] = useState(false);
-
+  const [promotionData, setPromotionData] = useState<any>(null);
   const handleSearch = async () => {
     if (!query.trim()) return; // 如果查询为空，则返回
 
@@ -46,6 +46,7 @@ export default function SearchPage() {
           if (novelError) throw novelError;
           // console.log(novelData)
           setResults(novelData ? [novelData] : []);
+          setPromotionData(promotionData);
         }
       } else {
         // 原有的 novels 表查询逻辑
@@ -90,14 +91,17 @@ export default function SearchPage() {
         </div>
 
         {loading ? (
-          <div className="text-center">
+          <div className="text-center"> 
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
             <p>Searching...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {results.map((novel: any) => (
-              <Link href={`/novel/${novel.id}`} key={novel.id}>
+              <Link 
+                href={`/novel/${novel.id}${promotionData ? `?promotion_code=${promotionData[0].promotion_code}&promotion_email=${promotionData[0].promoter_phone}` : ''}`} 
+                key={novel.id}
+              >
                 <Card className="flex flex-col hover:shadow-lg transition-shadow">
                   <div className="relative h-[200px] w-full">
                     <Image
