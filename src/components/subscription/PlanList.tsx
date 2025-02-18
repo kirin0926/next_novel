@@ -31,22 +31,23 @@ export function PlanList({ promotionCode, promotionEmail }: { promotionCode: str
   useEffect(() => {
     const fetchPrices = async () => {
       try {
-        // const response = await fetch('/api/get-prices');
-        // const data = await response.json();
-        const datas: Plan[] = [
-          {id: "price_1QryF6GkZUIlE6IEwTUR8XLu", name: "3day membership", price: 9.9, interval: "month", features: ["Feature 1", "Feature 2", "Feature 3"], description: "Description 1"},
-          {id: "price_1QryF6GkZUIlE6IEkFn4B32p", name: "7day membership", price: 19.99, interval: "month", features: ["Feature 1", "Feature 2", "Feature 3"], description: "Description 1"},
-          {id: "price_1QryF6GkZUIlE6IE9Ku8ICqQ", name: "15day membership", price: 39.99, interval: "month", features: ["Feature 1", "Feature 2", "Feature 3"], description: "Description 1"},
-          {id: "price_1QryF6GkZUIlE6IEgfy9rK5V", name: "30day membership", price: 99.99, interval: "month", features: ["Feature 1", "Feature 2", "Feature 3"], description: "Description 1"},
-          {id: "price_1QryF6GkZUIlE6IElZvecuUl", name: "90day membership", price: 259.99, interval: "month", features: ["Feature 1", "Feature 2", "Feature 3"], description: "Description 1"},
-        ]
-        setPlans(datas);
-        // if (data.prices) {
-        //   // 按照价格从低到高排序
-        //   const sortedPlans = data.prices.sort((a: Plan, b: Plan) => a.price - b.price);
-        //   setPlans(sortedPlans);
-        //   console.log('plans', sortedPlans);
-        // }
+        const response = await fetch('/api/get-prices');
+        const data = await response.json();
+        // console.log('data', data);
+        // const datas: Plan[] = [
+        //   {id: "price_1QryF6GkZUIlE6IEwTUR8XLu", name: "3day membership", price: 9.9, interval: "month", features: ["Feature 1", "Feature 2", "Feature 3"], description: "Description 1"},
+        //   {id: "price_1QryF6GkZUIlE6IEkFn4B32p", name: "7day membership", price: 19.99, interval: "month", features: ["Feature 1", "Feature 2", "Feature 3"], description: "Description 1"},
+        //   {id: "price_1QryF6GkZUIlE6IE9Ku8ICqQ", name: "15day membership", price: 39.99, interval: "month", features: ["Feature 1", "Feature 2", "Feature 3"], description: "Description 1"},
+        //   {id: "price_1QryF6GkZUIlE6IEgfy9rK5V", name: "30day membership", price: 99.99, interval: "month", features: ["Feature 1", "Feature 2", "Feature 3"], description: "Description 1"},
+        //   {id: "price_1QryF6GkZUIlE6IElZvecuUl", name: "90day membership", price: 259.99, interval: "month", features: ["Feature 1", "Feature 2", "Feature 3"], description: "Description 1"},
+        // ]
+        // setPlans(data);
+        if (data.prices) {
+          // 按照价格从低到高排序
+          const sortedPlans = data.prices.sort((a: Plan, b: Plan) => a.price - b.price);
+          setPlans(sortedPlans);
+          // console.log('plans', sortedPlans);
+        }
       } catch (error) {
         console.error('Error fetching prices:', error);
       } finally {
@@ -78,7 +79,7 @@ export function PlanList({ promotionCode, promotionEmail }: { promotionCode: str
           planId: planId,
           promotionCode: promotionCode,
           promotionEmail: promotionEmail,
-          // customerEmail: 
+          customerEmail: user?.emailAddresses[0].emailAddress
         }),
       });
 

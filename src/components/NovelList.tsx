@@ -85,7 +85,7 @@ export default function NovelList({ initialNovels }: NovelListProps) {
   }, [fetchNovels]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col"> 
       
       {/* Banner/Carousel Section */}
       <div className="mt-8 relative h-[300px] bg-gray-200">
@@ -121,8 +121,8 @@ export default function NovelList({ initialNovels }: NovelListProps) {
       <div className="container mx-auto px-4 py-8">
         <h2 className="text-2xl font-bold mb-6">Hot Novels</h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-          {novels?.map((novel) => (
-            <Link href={`/novel/${novel.id}`} key={novel.id}>
+          {novels?.map((novel, index) => (
+            <Link href={`/novel/${novel.id}`} key={`${novel.id}-${index}`}>
               <Card className="flex flex-col hover:shadow-lg transition-shadow duration-200">
                 <CardHeader className="p-3 sm:p-6">
                   <div className="relative h-[120px] sm:h-[160px] md:h-[200px]">

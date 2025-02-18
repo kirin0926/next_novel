@@ -15,50 +15,7 @@ import supabase from "@/lib/supabase"
 import { useEffect, useState } from 'react'
 import { useUser } from "@clerk/nextjs";
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-]
+
 
 // 定义 PromotionData 接口
 interface PromotionData {
@@ -70,14 +27,29 @@ interface PromotionData {
   created_at: string
 }
 
+// 定义 OrderData 接口
+interface OrderData {
+  id: number
+  promotion_email: string
+  promotion_code: string
+  status: string
+  current_period_start: string
+  current_period_end: string
+  cancel_at: string
+  canceled_at: string
+  created_at: string
+}
+
 export default function PromotionPage() {
   const router = useRouter()// 路由
   const { user, isLoaded, isSignedIn } = useUser()// 用户
   const [promotionData, setPromotionData] = useState<PromotionData[]>([])
+  const [orderData, setOrderData] = useState<OrderData[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
 
+      // 获取推广数据
       const { data, error } = await supabase
         .from('promotions')
         .select('*')
@@ -89,6 +61,20 @@ export default function PromotionPage() {
       }
       setPromotionData(data || [])
       // console.log(data)
+
+      // 获取订单数据
+      const { data: orderData, error: orderError } = await supabase
+        .from('websubscriptions')
+        .select('*')
+        .eq('promotion_email', user?.emailAddresses[0].emailAddress)
+
+      if (orderError) {
+        console.error('Error fetching order data:', orderError)
+        return
+      }
+      setOrderData(orderData || [])
+      console.log(orderData)
+        
     }
 
     if (user) {
@@ -107,7 +93,7 @@ export default function PromotionPage() {
       <div className="bg-white rounded-lg p-6">
         {/* 我的推广数据 */}
         <div>
-            <p>推广数据</p>
+            <div className="text-2xl font-bold">推广数据</div>
             <Table>
               <TableCaption>您的推广记录</TableCaption>
               <TableHeader>
@@ -139,34 +125,33 @@ export default function PromotionPage() {
             </Table>
           </div>
         {/* 我的订单数据 */}
-        <div>
-          <p>我的订单数据</p>
+        <div> 
+          <div className="text-2xl font-bold">我的订单数据</div>
           <Table>
-              <TableCaption>A list of your recent invoices.</TableCaption>
+              <TableCaption>您的订单记录</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Invoice</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Method</TableHead>
-                  <TableHead>Amount</TableHead>
+                  <TableHead>推广码</TableHead>
+                  <TableHead>状态</TableHead>
+                  <TableHead>开始时间</TableHead>
+                  <TableHead>结束时间</TableHead>
+                  <TableHead>取消时间</TableHead>
+                  <TableHead>创建时间</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {invoices.map((invoice) => (
-                  <TableRow key={invoice.invoice}>
-                    <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                    <TableCell>{invoice.paymentStatus}</TableCell>
-                    <TableCell>{invoice.paymentMethod}</TableCell>
-                    <TableCell className="text-right">{invoice.totalAmount}</TableCell>
-                  </TableRow>
-                ))}
+                {orderData.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell className="font-medium">{order.promotion_code}</TableCell>
+                      <TableCell>{order.status}</TableCell>
+                      <TableCell>{order.current_period_start}</TableCell>
+                      <TableCell>{order.current_period_end}</TableCell>
+                      <TableCell>{order.cancel_at}</TableCell>
+                      <TableCell>{order.canceled_at}</TableCell>
+                      <TableCell className="text-right">{order.created_at}</TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={3}>Total</TableCell>
-                  <TableCell className="text-right">$2,500.00</TableCell>
-                </TableRow>
-              </TableFooter>
             </Table>
           </div>
         {/* 这里添加推广相关的内容 */}

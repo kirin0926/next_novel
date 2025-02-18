@@ -14,8 +14,7 @@ interface Novel {
 
 // 改为异步组件
 export default async function Home() {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+  const supabase = createClient()
   // const router = useRouter()
   // 服务端获取初始数据
   const { data: initialNovels } = await supabase

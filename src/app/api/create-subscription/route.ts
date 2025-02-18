@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     // 创建 Stripe Checkout 会话
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],// 支付方式
-      // customer_email: customerEmail,// 客户邮箱
+      customer_email: customerEmail,// 客户邮箱
       line_items: [
         {
           price: planId,// 价格
