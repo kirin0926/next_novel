@@ -20,7 +20,13 @@ interface Plan {
   description: string;
 }
 
-export function PlanList({ promotionCode, promotionEmail }: { promotionCode: string, promotionEmail: string }) {
+export function PlanList({ 
+  promotionCode = '', 
+  promotionEmail = '' 
+}: { 
+  promotionCode?: string, 
+  promotionEmail?: string 
+}) {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   const [selectedPlan, setSelectedPlan] = useState<string>('pro');
