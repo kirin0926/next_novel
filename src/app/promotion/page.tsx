@@ -41,14 +41,20 @@ interface OrderData {
 }
 
 export default function PromotionPage() {
-  const router = useRouter()// 路由
-  const { user, isLoaded, isSignedIn } = useUser()// 用户
+  const router = useRouter()
+  const { user, isLoaded } = useUser()
   const [promotionData, setPromotionData] = useState<PromotionData[]>([])
   const [orderData, setOrderData] = useState<OrderData[]>([])
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (!isLoaded) return;
+    
+    if (!user) {
+      router.push('/auth/sign-in')
+      return;
+    }
 
+    const fetchData = async () => {
       // 获取推广数据
       const { data, error } = await supabase
         .from('promotions')
@@ -74,18 +80,13 @@ export default function PromotionPage() {
       }
       setOrderData(orderData || [])
       console.log(orderData)
-        
     }
 
-    if (user) {
-      fetchData()
-    }
-  }, [user])
+    fetchData()
+  }, [user, isLoaded, router])
 
-  if (!user) {
-    // 未登录时重定向到登录页面
-    router.push('/auth/sign-in')
-    return;
+  if (!isLoaded) {
+    return <div>Loading...</div>
   }
 
   return (
