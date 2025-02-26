@@ -44,7 +44,7 @@ export async function Header() {
           {/* 未登录时，显示登录按钮 */}
           {
             !userId && (
-              <Link href="/auth/sign-in" passHref>
+              <Link href="/auth/sign-up" passHref>
                 <Button variant="ghost">Login</Button>
               </Link>
             )
@@ -105,7 +105,7 @@ export async function Header() {
                 // 未登录时，显示登录按钮
                 !userId && (
                   <Button variant="ghost" className="w-full justify-start text-base" asChild>
-                    <Link href="/auth/sign-in" className="flex items-center gap-2">
+                    <Link href="/auth/sign-up" className="flex items-center gap-2">
                       <LogInIcon className="h-5 w-5" />
                       Login
                     </Link>
