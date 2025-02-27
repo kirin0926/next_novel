@@ -121,7 +121,7 @@ export function PlanList({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 py-8">
+    <div className="grid grid-cols-2 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
       {plans.map((plan) => (
         <Card
           key={plan.id}
@@ -137,14 +137,14 @@ export function PlanList({
             </div>
           )}
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold capitalize">{plan.name}</CardTitle>
+            <CardTitle className="text-xl font-bold capitalize">{plan.name}</CardTitle>
             <div className="mt-6">
-              <span className="text-4xl font-bold">${plan.price}</span>
+              <span className="text-xl font-bold">${plan.price}</span>
               <span className="text-lg text-muted-foreground">/{plan.interval}</span>
             </div>
-            <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
+            {/* <p className="text-sm text-muted-foreground mt-2">{plan.description}</p> */}
           </CardHeader>
-          <CardContent className="flex-grow">
+          {/* <CardContent className="flex-grow">
             <ul className="space-y-4">
               {plan.features.map((feature, index) => (
                 <li key={index} className="flex items-start gap-3">
@@ -153,7 +153,7 @@ export function PlanList({
                 </li>
               ))}
             </ul>
-          </CardContent>
+          </CardContent> */}
           <CardFooter>
             <Button 
               className="w-full text-base font-medium"
@@ -161,6 +161,7 @@ export function PlanList({
               variant={selectedPlan === plan.id ? 'default' : 'outline'}
               onClick={() => handleSubscribe(plan.id)}
               disabled={loading}
+              data-umami-event={`subscribe-${plan.name}`}
             >
               {loading ? 
                 <span className="flex items-center gap-2">

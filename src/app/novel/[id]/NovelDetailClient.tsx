@@ -201,7 +201,7 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
               ))}
               
               {!isSubscribed && (
-                <div className="mt-8 p-6 bg-gray-50 rounded-lg text-center">
+                <div className="mt-8 py-6 rounded-lg text-center">
                   <h3 className="text-xl font-semibold mb-4">Subscribe to continue reading</h3>
                   <p className="text-gray-600 mb-4">
                     You have read the first 3000 words, subscribe to continue reading

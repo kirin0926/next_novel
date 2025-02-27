@@ -61,7 +61,7 @@ export default function RootLayout({
               src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7897104007345492"
               crossOrigin="anonymous"
             />
-            <script defer src="https://umami-dun-pi.vercel.app/script.js" data-website-id="a8c9a43e-6ecf-465d-8024-651833a02934"></script>
+            <script defer src="https://umami-dun-pi.vercel.app/script.js" data-website-id="a8c9a43e-6ecf-465d-8024-651833a02934" data-auto-track="true"></script>
           </>
         )}
           
