@@ -123,7 +123,7 @@ export default function NovelList({ initialNovels }: NovelListProps) {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {novels?.map((novel, index) => (
             <Link href={`/novel/${novel.id}`} key={`${novel.id}-${index}`}>
-              <Card className="flex flex-col hover:shadow-lg transition-shadow duration-200">
+              <Card className="flex flex-col">
                 <CardHeader className="p-3 sm:p-6">
                   <div className="relative h-[120px] sm:h-[160px] md:h-[200px]">
                     <Image
@@ -137,14 +137,14 @@ export default function NovelList({ initialNovels }: NovelListProps) {
                   </div>
                   <CardTitle className="mt-2 sm:mt-4 text-base sm:text-lg md:text-xl line-clamp-2">{novel.title}</CardTitle>
                 </CardHeader>
-                <CardContent className="p-3 sm:px-6">
+                {/* <CardContent className="p-3 sm:px-6">
                   <p className="text-gray-600 text-sm sm:text-base line-clamp-2">{novel.description}</p>
-                </CardContent>
+                </CardContent> */}
                 <CardFooter className="md:p-6 md:py-3 sm:p-6 flex justify-between mt-auto">
                   <div className="flex items-center gap-1 sm:gap-2">
                     <Heart className="w-4 h-4 sm:w-5 sm:h-5" /><span className="text-sm sm:text-base">{novel.like}</span>
                   </div>
-                  <div className="text-sm sm:text-base">read more</div>
+                  <div className="text-sm sm:text-base">read</div>
                 </CardFooter>
               </Card>
             </Link>
