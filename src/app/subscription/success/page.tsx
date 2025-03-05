@@ -3,7 +3,7 @@
 import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
-
+import Link from 'next/link'
 // 引入 store
 import { useStore } from '@/store' 
 interface SubscriptionDetails {
@@ -58,6 +58,7 @@ function SuccessContent() {
           <p className="text-lg text-gray-600">
             Amount: ${(details.amount_total || 0) / 100}
           </p>
+          <Link className="text-blue-500 hover:text-blue-700" href="/">go back to Home</Link>
         </div>
       )}
     </div>
