@@ -6,16 +6,7 @@ import { Check } from "lucide-react";
 import { useState, useEffect } from "react";
 import { loadStripe } from '@stripe/stripe-js';
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from 'next/navigation';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useRouter,usePathname,useSearchParams } from 'next/navigation';
 
 // 确保替换为你的 Stripe publishable key
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -38,12 +29,13 @@ export function PlanList({
   promotionEmail?: string 
 }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { isLoaded, isSignedIn, user } = useUser();//获取用户信息
   const [selectedPlan, setSelectedPlan] = useState<string>('pro');//选中的订阅计划
   const [loading, setLoading] = useState(false);//是否加载
   const [plans, setPlans] = useState<Plan[]>([]);//订阅计划
   const [isLoadingPlans, setIsLoadingPlans] = useState(true);//是否加载订阅计划
-  const [isDialogOpen, setIsDialogOpen] = useState(false);//是否打开对话框
   
   // 获取订阅计划
   useEffect(() => {
@@ -76,81 +68,12 @@ export function PlanList({
     fetchPrices();
   }, []);
 
-  // 支付表单组件
-  function CheckoutForm({ planId, onSuccess, onError }: { 
-    planId: string, 
-    onSuccess: () => void,
-    onError: (error: string) => void 
-  }) {
-    const stripe = useStripe();
-    const elements = useElements();
-    const [loading, setLoading] = useState(false);
-    const { user } = useUser();
-
-    const handleSubmit = async (event: React.FormEvent) => {
-      event.preventDefault();
-      if (!stripe || !elements) return;
-
-      setLoading(true);
-      try {
-        // 创建支付意向
-        const response = await fetch('/api/create-payment-intent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            planId,
-            customerEmail: user?.emailAddresses[0].emailAddress
-          }),
-        });
-        
-        const { clientSecret } = await response.json();
-        
-        // 确认支付
-        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card: elements.getElement(CardElement)!,
-          }
-        });
-
-        if (error) {
-          onError(error.message || '支付失败');
-        } else if (paymentIntent.status === 'succeeded') {
-          onSuccess();
-        }
-      } catch (err) {
-        onError('支付过程中发生错误');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    return (
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <CardElement className="p-3 border rounded-md" />
-        </div>
-        <Button 
-          type="submit" 
-          disabled={!stripe || loading} 
-          className="w-full"
-        >
-          {loading ? '处理中...' : '确认支付'}
-        </Button>
-      </form>
-    );
-  }
   
   // 订阅计划
   const handleSubscribe = async (planId: string) => {
     try {
       if (!isLoaded) return;
-      
-      if (!isSignedIn) {
-        // 未登录时重定向到登录页面
-        router.push('/auth/sign-in')
-        return;
-      }
-
+      // 设置加载状态
       setLoading(true);
       // 继续订阅流程...
       const response = await fetch('/api/create-subscription', {
@@ -162,12 +85,11 @@ export function PlanList({
           planId: planId,
           promotionCode: promotionCode,
           promotionEmail: promotionEmail,
-          customerEmail: user?.emailAddresses[0].emailAddress
+          cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}${pathname}?${searchParams.toString()}`,
         }),
       });
 
       const { sessionId, error } = await response.json();
-      
       if (error) throw new Error(error);
 
       // 获取 Stripe 实例
@@ -181,20 +103,13 @@ export function PlanList({
 
       if (stripeError) throw stripeError;
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Subscription error:', error);
       // 这里可以添加错误提示
     } finally {
       setLoading(false);
     }
   };
-
-  // 打开对话框
-  const handleDialogOpen = async(planId: string) => {
-    setIsDialogOpen(true);
-    // setSelectedPlan(planId);
-    console.log('planId', planId);
-  }
 
   if (isLoadingPlans) {
     return (
@@ -259,32 +174,6 @@ export function PlanList({
           </CardFooter>
         </Card>
       ))}
-
-      {/* 订阅对话框 */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>输入支付信息</DialogTitle>
-            <DialogDescription>
-              请输入您的信用卡信息以完成订阅
-            </DialogDescription>
-          </DialogHeader>
-          <Elements stripe={stripePromise}>
-            <CheckoutForm 
-              planId={selectedPlan}
-              onSuccess={() => {
-                setIsDialogOpen(false);
-                // 可以添加成功提示或跳转
-                router.push('/dashboard');
-              }}
-              onError={(error) => {
-                // 可以添加错误提示
-                console.error(error);
-              }}
-            />
-          </Elements>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 } 

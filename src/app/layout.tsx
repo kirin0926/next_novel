@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Layout } from "@/components/layout";
 import { ClerkProvider } from '@clerk/nextjs';
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const geistSans = Geist({// 字体
   variable: "--font-geist-sans",
@@ -68,7 +67,6 @@ export default function RootLayout({
         </head>
         <body  className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <Layout>{children}</Layout>
-          <SpeedInsights/>
         </body>
       </html>
     </ClerkProvider>

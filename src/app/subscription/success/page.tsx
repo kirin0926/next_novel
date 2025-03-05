@@ -4,6 +4,8 @@ import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
+// 引入 store
+import { useStore } from '@/store' 
 interface SubscriptionDetails {
   customer_email?: string;
   subscription?: string;
@@ -16,12 +18,23 @@ function SuccessContent() {
   const [details, setDetails] = useState<SubscriptionDetails | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // 获取 store 更新方法
+  const setSubscription = useStore(state => state.setSubscription)
+  const clearSubscription = useStore(state => state.clearSubscription)
+
   useEffect(() => {
     if (sessionId) {
       fetch(`/api/subscription-status?session_id=${sessionId}`)
         .then(res => res.json())
         .then(data => {
+          console.log('data', data);
           setDetails(data)
+          // 更新订阅状态
+          setSubscription({
+            plan: data.subscription,
+            subscriptionId: data.subscription,
+            expiresAt: data.expires_at
+          })
           setLoading(false)
         })
         .catch(error => {
@@ -29,7 +42,7 @@ function SuccessContent() {
           setLoading(false)
         })
     }
-  }, [sessionId])
+  }, [sessionId, setSubscription])
 
   if (loading) {
     return <div>Loading...</div>
@@ -40,7 +53,7 @@ function SuccessContent() {
       <h1 className="text-4xl font-bold mb-4">Subscription Successful!</h1>
       {details && (
         <div className="mt-8 space-y-4">
-          <p className="text-lg text-gray-600">Email: {details.customer_email}</p>
+          {/* <p className="text-lg text-gray-600">Email: {details.customer_email}</p> */}
           <p className="text-lg text-gray-600">Subscription ID: {details.subscription}</p>
           <p className="text-lg text-gray-600">
             Amount: ${(details.amount_total || 0) / 100}
