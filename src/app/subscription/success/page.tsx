@@ -1,17 +1,18 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 // 引入 store
 import { useStore } from '@/store' 
+
 interface SubscriptionDetails {
   customer_email?: string;
   subscription?: string;
   amount_total?: number;
 }
 
-function SuccessContent() {
+function SubscriptionContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
   const [details, setDetails] = useState<SubscriptionDetails | null>(null)
@@ -65,10 +66,8 @@ function SuccessContent() {
 
 export default function SuccessPage() {
   return (
-    <div className="min-h-screen pt-20">
-      <div className="container mx-auto px-4 py-16 text-center">
-        <SuccessContent />
-      </div>
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <SubscriptionContent />
+    </Suspense>
   )
 } 

@@ -10,11 +10,6 @@ export default function SubscriptionPage() {
         </div> 
 
         <PlanList />
-
-        <div className="mt-16 text-center">
-          <h2 className="text-2xl font-bold mb-8">membership privileges</h2>
-          <PlanList />
-        </div>
       </div>
     </div>
   );

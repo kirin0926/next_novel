@@ -3,10 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { loadStripe } from '@stripe/stripe-js';
 import { useUser } from "@clerk/nextjs";
-import { useRouter,usePathname,useSearchParams } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 // 确保替换为你的 Stripe publishable key
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -21,7 +21,8 @@ interface Plan {
   description: string;
 }
 
-export function PlanList({ 
+// 将主要逻辑抽取到单独的组件
+function PlanListContent({ 
   promotionCode = '', 
   promotionEmail = '' 
 }: { 
@@ -175,5 +176,24 @@ export function PlanList({
         </Card>
       ))}
     </div>
+  );
+}
+
+// 导出的主组件使用 Suspense 包裹内容组件
+export function PlanList({ 
+  promotionCode = '', 
+  promotionEmail = '' 
+}: { 
+  promotionCode?: string, 
+  promotionEmail?: string 
+}) {
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <PlanListContent promotionCode={promotionCode} promotionEmail={promotionEmail} />
+    </Suspense>
   );
 } 
