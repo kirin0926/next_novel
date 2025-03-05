@@ -1,6 +1,5 @@
 'use client';
 
-import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -20,7 +19,6 @@ function SuccessContent() {
 
   // 获取 store 更新方法
   const setSubscription = useStore(state => state.setSubscription)
-  const clearSubscription = useStore(state => state.clearSubscription)
 
   useEffect(() => {
     if (sessionId) {
@@ -69,11 +67,7 @@ export default function SuccessPage() {
   return (
     <div className="min-h-screen pt-20">
       <div className="container mx-auto px-4 py-16 text-center">
-        <Suspense fallback={
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-        }>
-          <SuccessContent />
-        </Suspense>
+        <SuccessContent />
       </div>
     </div>
   )
