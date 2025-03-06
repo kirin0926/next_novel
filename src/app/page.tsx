@@ -57,6 +57,6 @@ export default async function Home() {
 
       {/* Novel Grid - 使用客户端组件处理交互 */}
       <NovelList initialNovels={initialNovels || []} />
-    </div>
+    </div> 
   );
 }

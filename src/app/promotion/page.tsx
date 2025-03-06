@@ -94,15 +94,15 @@ export default function PromotionPage() {
       <div className="bg-white rounded-lg p-6">
         {/* 我的推广数据 */}
         <div>
-            <div className="text-2xl font-bold">推广数据</div>
+            <div className="text-2xl font-bold">promotion data</div>
             <Table>
-              <TableCaption>您的推广记录</TableCaption>
+              <TableCaption>your promotion records</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead>小说id</TableHead>
-                  <TableHead>推广码</TableHead>
-                  <TableHead className="text-right">推广人</TableHead>
-                  <TableHead>创建时间</TableHead>
+                  <TableHead>novel id</TableHead>
+                  <TableHead>promotion code</TableHead>
+                  <TableHead className="text-right">promoter</TableHead>
+                  <TableHead>created at</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -124,20 +124,20 @@ export default function PromotionPage() {
                 </TableRow>
               </TableFooter> */}
             </Table>
-          </div>
+        </div>
         {/* 我的订单数据 */}
-        <div> 
-          <div className="text-2xl font-bold">我的订单数据</div>
+        <div>  
+          <div className="text-2xl font-bold">my orders</div>
           <Table>
-              <TableCaption>您的订单记录</TableCaption>
+              <TableCaption>your order records</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead>推广码</TableHead>
-                  <TableHead>状态</TableHead>
-                  <TableHead>开始时间</TableHead>
-                  <TableHead>结束时间</TableHead>
-                  <TableHead>取消时间</TableHead>
-                  <TableHead>创建时间</TableHead>
+                  <TableHead>promotion code</TableHead>
+                  <TableHead>status</TableHead>
+                  <TableHead>start at</TableHead>
+                  <TableHead>end at</TableHead>
+                  <TableHead>cancel at</TableHead>
+                  <TableHead>created at</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -154,7 +154,7 @@ export default function PromotionPage() {
                   ))}
               </TableBody>
             </Table>
-          </div>
+        </div>
         {/* 这里添加推广相关的内容 */}
       </div>
     </div>
