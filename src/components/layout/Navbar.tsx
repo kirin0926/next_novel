@@ -26,9 +26,9 @@ export async function Header() {
           <Link href="/" passHref>
             <Button variant="ghost">Home</Button>
           </Link>
-          <Link href="/subscription" passHref>
+          {/* <Link href="/subscription" passHref>
             <Button variant="ghost">Subscription</Button>
-          </Link>
+          </Link> */}
           {/* 推广中心 */}
           {/* 登录时，显示推广中心按钮和用户按钮 */}
           {userId && (
@@ -76,12 +76,12 @@ export async function Header() {
                   Home
                 </Link>
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-base" asChild>
+              {/* <Button variant="ghost" className="w-full justify-start text-base" asChild>
                 <Link href="/subscription" className="flex items-center gap-2">
                   <BookOpen className="h-5 w-5" />
                   Subscription
                 </Link>
-              </Button>
+              </Button> */}
           
               {/* 推广中心 */}
               {userId && (

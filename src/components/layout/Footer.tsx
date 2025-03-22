@@ -14,8 +14,8 @@ export function Footer() {
               On nicenovel.org you can find thoundsands of english novel, novel series, best author!
             </p>
             <div className="flex items-center gap-2">
-              <Link href="mailto:contact@nicenovel.org" className="text-gray-600 hover:text-gray-900">
-                contact@nicenovel.org
+              <Link href="mailto:support@nicenovel.org" className="text-gray-600 hover:text-gray-900">
+                support@nicenovel.org
               </Link>
             </div>
           </div>

@@ -25,6 +25,7 @@ import { formatDate, formatContent } from '@/lib/utils'
 import { useUser,SignIn } from "@clerk/nextjs";
 import supabase from '@/lib/supabase';
 import { PlanList } from '@/components/subscription/PlanList'
+import { Plan } from '@/components/subscription/plan'
 import { useStore } from '@/store'
 
 interface NovelDetailClientProps {
@@ -38,7 +39,7 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
   const [isDialogOpen, setIsDialogOpen] = useState(false)// 推广对话框
   const { user, isLoaded, isSignedIn } = useUser()// 用户
   const [promotionCode, setPromotionCode] = useState('')// 推广码
-  const { isSubscribed, setSubscription } = useStore()// 是否订阅
+  const { isSubscribed, setSubscription, clearSubscription } = useStore()// 是否订阅
 
   // 检查用户是否已订阅
   useEffect(() => {
@@ -191,11 +192,12 @@ export default function NovelDetailClient({ initialNovel, relatedNovels }: Novel
                   <p className="text-gray-600 mb-4">
                     You have read the first 3000 words, subscribe to continue reading
                   </p>
-                  <PlanList/>
+                  {/* <PlanList/> */}
+                  <Plan/>
                 </div>
               )}
             </section>
-
+            {/* <Button onClick={() => clearSubscription()}>Clear Subscription</Button> */}
             {/* 
             // 相关小说
             <section className="mt-12">
