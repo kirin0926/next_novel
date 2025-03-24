@@ -41,7 +41,6 @@ export function Plan() {
     "clientId": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",// 客户端ID
     "enable-funding": "venmo",// 启用支付方式
     "disable-funding": "",// 禁用支付方式
-    "buyer-country": "US",// 买家国家
     currency: "USD",// 货币
     "data-page-type": "product-details",// 页面类型
     components: "buttons",// 组件
@@ -59,7 +58,7 @@ export function Plan() {
         // 打开支付对话框
         setIsDialogOpen(true);
         setSelectedPlan(plan);
-        console.log('selectedPlan',selectedPlan)
+        console.log('plan',plan);
       } catch (error) {
         console.error(error);
       } finally {
@@ -71,6 +70,7 @@ export function Plan() {
   // 创建订单
   const PayPalCreateOrder = async () => {
     try {
+      console.log('selectedPlan',selectedPlan);
       const response = await fetch("/api/paypal-orders", {
         method: "POST",// 方法
         headers: {
@@ -201,29 +201,31 @@ export function Plan() {
             <DialogHeader>
               <DialogTitle className="text-center">Paypal Payment</DialogTitle>
               <DialogDescription>
-                <PayPalScriptProvider options={initialOptions}>
-                  <PayPalButtons 
-                    style={{
-                      shape: "rect",// 按钮形状
-                      layout: "vertical",// 按钮布局
-                      color: "gold",// 按钮颜色
-                      label: "paypal",// 按钮标签
-                    }}
-                    createOrder={PayPalCreateOrder}
-                    onApprove={async (data, actions) => {
-                      await PayPalApprove(data,actions)
-                    }}
-                    onCancel={() => {
-                      console.log('cancel')
-                    }}
-                    onError={() => {
-                      console.log('error')
-                    }}/>
-                </PayPalScriptProvider>
+                <div className="">
+                  <PayPalScriptProvider options={initialOptions}>
+                    <PayPalButtons 
+                      style={{
+                        shape: "rect",// 按钮形状
+                        layout: "vertical",// 按钮布局
+                        color: "gold",// 按钮颜色
+                        label: "paypal",// 按钮标签
+                      }}
+                      createOrder={PayPalCreateOrder}
+                      onApprove={async (data, actions) => {
+                        await PayPalApprove(data,actions)
+                      }}
+                      onCancel={() => {
+                        console.log('cancel')
+                      }}
+                      onError={() => {
+                        console.log('error')
+                      }}/>
+                  </PayPalScriptProvider>
+                </div>
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
-        </Dialog>
+      </Dialog>
     </>
   );
 }

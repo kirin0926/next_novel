@@ -13,15 +13,15 @@ const client = new Client({
         oAuthClientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '',
         oAuthClientSecret: process.env.PAYPAL_SECRET_KEY || '',
     },
-    timeout: 0,
-    environment: Environment.Sandbox,
+    timeout: 0,// 超时时间
+    environment: Environment.Production,// 环境
     logging: {
-        logLevel: LogLevel.Info,
+        logLevel: LogLevel.Info,// 日志级别
         logRequest: {
-        logBody: true,
+            logBody: true,// 请求体
         },
         logResponse: {
-        logHeaders: true,
+            logHeaders: true,// 响应头
         },
     },
 });
